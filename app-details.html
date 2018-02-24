@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Amazon - RIYO OFM</title>
+
+        <!-- Metas -->
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" content="">
+        <meta name="keywords" content="">
+        <!-- View Port for responsive -->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <!-- Import Google Icon Font -->
+        <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <!-- Import Angular Material -->
+        <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css">
+        <!-- Import Materialize CSS -->
+        <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+        <!-- Import custom CSS -->
+        <link type="text/css" rel="stylesheet" href="css/custom.css"/>
+
+        <!-- Import jQuery Lib -->
+        <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    </head>
+
+    <body class="app-detail-page" ng-app="appDetails">
+        <div id="progress-overlay">
+            <div layout="row" layout-sm="column" layout-align="space-around">
+                <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+            </div>
+        </div>
+        <div class="devsite-wrapper">
+            <header>
+                <!-- Header Start -->
+                <div class="header">
+                    <div class="app-logo">
+                        <a href="index.html" class="logo">RIYO OFM</a>
+                    </div>
+                    <div class="container">
+                        <nav class="nav-extended">
+                            <div class="nav-wrapper">
+                                <ul class="left hide-on-med-and-down custom-nav">
+                                    <li><a href="index.html" class="waves-effect waves-light">Dashboard</a></li>
+                                    <li><a href="inventory.html" class="waves-effect waves-light">Inventory</a></li>
+                                    <li><a href="orders.html" class="waves-effect waves-light">Orders</a></li>
+                                    <li class="active"><a href="integrations.html" class="waves-effect waves-light">Integrations</a></li>
+                                    <li><a href="customers.html" class="waves-effect waves-light">Customers</a></li>
+                                </ul>
+                            </div>
+                    </div>
+                    </nav>
+                    <div class="usermenu">
+                        <a class="dropdown-button" href="#!" data-activates="umenu">YOAV<i class="material-icons right">arrow_drop_down</i></a>
+                        <ul id="umenu" class="dropdown-content">
+                            <li><a href="#!">My Profile</a></li>
+                            <li class="divider"></li>
+                            <li><a href="#!">Account Settings</a></li>
+                            <li class="divider"></li>
+                            <li><a href="#!">Logout</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- Header End -->
+
+                <!-- Sub Header Start -->
+                <div class="sub-header dark">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col s8 offset-s2 title-wrapper">
+                                <a href="integrations.html" class="black-btn"><i class="material-icons">keyboard_backspace</i></a>
+                                <h1 class="page-title">Amazon</h1>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <!-- Sub Header End -->
+            </header>
+        </div>
+
+        <!-- Main Start -->
+        <div class="intergrations-main main-container">
+            <div class="container">
+                <!-- Active APP Start -->
+                <div class="row apps-active">
+                    <div class="col s8 offset-s2">
+                        <div class="card company-details cu-card bx-shadow">
+                            <div class="card-content">
+                                <ul class="collection with-header">
+                                    <li class="collection-item">
+                                        <div class="row row-nopadding">
+                                            <div class="col s3"><img src="images/amazone.jpg" alt="ebay" width="120"/></div>
+                                            <div class="col s6">
+                                                <div class="company-name">
+                                                    <h4>Amazon</h4>
+                                                    <span>Amazon is most popular marketplace</span>
+                                                </div>
+                                            </div>
+                                            <div class="col s3 company-desc">
+                                                <div class="switch">
+                                                    <label>
+                                                        <input type="checkbox">
+                                                        <span class="lever"></span>
+                                                    </label>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="collection-item"><span class="app-last-activity">Last Activity: Today 14:39</span></li>
+                                    <li class="collection-item" id="infocol1">
+                                        <div class="view-mode">
+                                            <i class="material-icons editdetail-icon">mode_edit</i>
+                                            <div class="row">
+                                                <div class="col s3">RIYO Name :</div>
+                                                <div class="col s8"><span class="item-detail">Steve Rob</span></div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col s3">Amazon Name:</div>
+                                                <div class="col s8"><span class="item-detail">sgu online</span></div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col s3">Seller ID :</div>
+                                                <div class="col s8"><span class="item-detail">A2DDQC84LG5MKH</span></div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col s3">Amazon URL :</div>
+                                                <div class="col s8"><span class="item-detail">amazon.co.uk/shops/A2DDQC84LG5MKH</span></div>
+
+                                            </div>
+                                        </div> 
+                                        <div class="edit-mode">
+                                            <i class="material-icons updatedetail-icon">&#xE876;</i>
+                                            <div class="row">
+                                                <div class="col s3">RIYO Name :</div>
+                                                <div class="col s8"><input id="riyo_name" name="riyo_name" type="text"  value="Steve Rob"></div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col s3">Amazon Name:</div>
+                                                <div class="col s8"><input id="amazon_name" name="amazon_name" type="text"  value="sgu online"></div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col s3">Seller ID :</div>
+                                                <div class="col s8"><input id="seller_id" name="seller_id" type="text"  value="A2DDQC84LG5MKH"></div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col s3">Amazon URL :</div>
+                                                <div class="col s8"><input id="amazon_url" name="amazon_url" type="text"  value="amazon.co.uk/shops/A2DDQC84LG5MKH"></span></div>
+
+                                            </div>
+                                        </div>
+
+                                    </li>
+                                    <li class="collection-item" id="infocol2">
+                                        <div class="view-mode">
+                                            <i class="material-icons editdetail-icon">mode_edit</i>
+                                            <div class="row">
+                                                <div class="col s3">API Key :</div>
+                                                <div class="col s8"><span class="item-detail">******26</span></div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col s3">Password :</div>
+                                                <div class="col s8"><span class="item-detail">*******</span></div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col s3">Shared Secret :</div>
+                                                <div class="col s8"><span class="item-detail">********</span></div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col s3">Tag :</div>
+                                                <div class="col s8"><span class="item-detail">hyuofm87juys925</span></div>
+
+                                            </div>
+                                        </div>
+                                        <div class="edit-mode">
+                                            <i class="material-icons updatedetail-icon">&#xE876;</i>
+                                            <div class="row">
+                                                <div class="col s3">API Key :</div>
+                                                <div class="col s8"><input id="key" name="key" type="text"  value="******26"></div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col s3">Password :</div>
+                                                <div class="col s8"><input id="password" name="password" type="text"  value="********"></div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col s3">Shared Secret :</div>
+                                                <div class="col s8"><input id="shared_secret" name="shared_secret" type="text"  value="********"></div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col s3">Tag :</div>
+                                                <div class="col s8"><input id="tag" name="tag" type="text"  value="hyuofm87juys925"></div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="collection-item" id="infocol3">
+                                        <div class="view-mode">
+                                            <i class="material-icons editdetail-icon">mode_edit</i>
+                                            <div class="row">
+                                                <div class="col s3">Update Stock</div>
+                                                <div class="col s8">
+                                                    <md-radio-group ng-model="data.group1">
+                                                        <md-radio-button value="1" class="md-primary" ng-selected="true" ng-disabled="true"><span class="item-detail">Don't Sync</span></md-radio-button>
+                                                        <md-radio-button value="2" ng-disabled="true"><span class="item-detail"> Sync OFM the Amazon </span></md-radio-button>
+                                                        <md-radio-button value="3" ng-disabled="true"><span class="item-detail">Sync Amazon to OFM </span></md-radio-button>
+                                                    </md-radio-group>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="edit-mode">
+                                            <i class="material-icons updatedetail-icon">&#xE876;</i>
+                                            <div class="row">
+                                                <div class="col s3">Update Stock</div>
+                                                <div class="col s8">
+                                                    <md-radio-group ng-model="data.group1">
+                                                        <md-radio-button value="1" class="md-primary"><span class="item-detail">Don't Sync</span></md-radio-button>
+                                                        <md-radio-button value="2"><span class="item-detail"> Sync OFM the Amazon </span></md-radio-button>
+                                                        <md-radio-button value="3"><span class="item-detail">Sync Amazon to OFM </span></md-radio-button>
+                                                    </md-radio-group>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Active APP End -->
+
+            </div> <!-- Container End -->
+        </div>
+        <!-- Main End -->
+
+        <!--Import jQuery before materialize js-->
+        <script type="text/javascript" src="js/materialize.min.js"></script>
+        <!-- Angular Lib js -->
+        <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
+
+        <!-- Angular Material Library -->
+        <script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
+        <!-- Load Page App  -->
+        <script type="text/javascript">
+            (function () {
+                'use strict';
+                angular
+                        .module('appDetails', ['ngMaterial'])
+                        // Theme Config
+                        .config(function ($mdThemingProvider) {
+                            $mdThemingProvider.theme('default')
+                                    .primaryPalette('blue', {
+                                        'default': 'A700'
+                                    })
+                                    .accentPalette('blue', {
+                                        'default': 'A700'
+                                    });
+                        })
+
+                // PAGE IS FULLY LOADED  
+                $(window).load(function () {
+                    $('#progress-overlay').fadeOut();
+                });
+                
+                // Edit view on edit icon click
+                $('.editCustDetail-icon').click(function(){
+                    $(this).parents('.collection-item').children('.view-mode').slideUp();
+                    $(this).parents('.collection-item').children('.edit-mode').slideDown();
+                });
+                
+                $('.updateCustDetail-icon').click(function(){
+                   $(this).parents('.collection-item').children('.view-mode').slideDown(); 
+                   $(this).parents('.collection-item').children('.edit-mode').slideUp(); 
+                });
+            })();
+        </script>
+    </body>
+</html>

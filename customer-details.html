@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Customer Detail - RIYO OFM</title>
+
+        <!-- Metas -->
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" content="">
+        <meta name="keywords" content="">
+        <!-- View Port for responsive -->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <!-- Import Google Icon Font -->
+        <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <!-- Import Angular Material -->
+        <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css">
+        <!-- Import Materialize CSS -->
+        <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+        <!-- Import custom CSS -->
+        <link type="text/css" rel="stylesheet" href="css/custom.css"/>
+
+        <!-- Import jQuery Lib -->
+        <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    </head>
+
+    <body class="customer-detail-page" ng-app="customerDetail">
+        <div id="progress-overlay">
+            <div layout="row" layout-sm="column" layout-align="space-around">
+                <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+            </div>
+        </div>   
+        <div class="devsite-wrapper">
+            <header>
+                <!-- Header Start -->
+                <div class="header">
+                    <div class="app-logo">
+                        <a href="index.html" class="logo">RIYO OFM</a>
+                    </div>
+                    <div class="container">
+                        <nav class="nav-extended">
+                            <div class="nav-wrapper">
+                                <ul class="left hide-on-med-and-down custom-nav">
+                                    <li><a href="index.html" class="waves-effect waves-light">Dashboard</a></li>
+                                    <li><a href="inventory.html" class="waves-effect waves-light">Inventory</a></li>
+                                    <li><a href="orders.html" class="waves-effect waves-light">Orders</a></li>
+                                    <li><a href="integrations.html" class="waves-effect waves-light">Integrations</a></li>
+                                    <li class="active"><a href="customers.html" class="waves-effect waves-light">Customers</a></li>
+                                </ul>
+                            </div>
+                        </nav>
+                    </div>
+
+                    <div class="usermenu">
+                        <a class="dropdown-button" href="#!" data-activates="umenu">YOAV<i class="material-icons right">arrow_drop_down</i></a>
+                        <ul id="umenu" class="dropdown-content">
+                            <li><a href="#!">My Profile</a></li>
+                            <li class="divider"></li>
+                            <li><a href="#!">Account Settings</a></li>
+                            <li class="divider"></li>
+                            <li><a href="#!">Logout</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- Header End -->
+
+                <!-- Sub Header Start -->
+                <div class="sub-header dark">
+                    <div class="container">
+
+                        <div class="row customer-title">
+                            <div class="col s8 title-wrapper">
+                            	<a href="integrations.html" class="black-btn"><i class="material-icons">keyboard_backspace</i></a>
+                                <h1 class="page-title">Mittie Clayton</h1>
+                            </div>
+                            <div class="col s4">
+                                <md-toolbar class="_md-toolbar-transitions subheader-buttons">
+                                    <div class="md-toolbar-tools">
+                                        <span flex="" class="flex"></span>
+                                        <a href="http://postyoulike.com/riyo_ofm/customers.html" class="md-icon-button md-button md-ink-ripple modal-close" type="button" aria-label="Cancle">
+                                            <i class="material-icons ng-scope">cancel</i>
+                                        </a>
+                                        <a href="http://postyoulike.com/riyo_ofm/customers.html" class="md-icon-button md-button md-ink-ripple modal-close" type="button" aria-label="Cancle">
+                                            <i class="material-icons ng-scope">done</i>
+                                        </a>
+                                        <a href="" class="md-icon-button md-button md-ink-ripple modal-close" type="button" aria-label="Cancle">
+                                            <i class="material-icons ng-scope">more_vert</i>
+                                        </a> 
+                                    </div>
+                                </md-toolbar>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <!-- Sub Header End -->
+            </header>
+        </div>
+
+        <!-- Main Start -->
+        <div class="intergrations-main main-container">
+            <div class="container">
+                <!-- Active APP Start -->
+                <div class="row customer-active">
+                    <div class="col s7">
+                        <div class="card customer-details cu-card bx-shadow">
+                            <div class="card-content">
+                                <ul class="collection with-header">
+                                    <li class="collection-item">
+                                        <div class="row row-nopadding">                                       
+                                            <div class="col s9">
+                                                <div class="company-name">
+                                                    <h4>Mittie Clayton</h4>
+                                                    <span class="since-title">Active since 15.4.2014</span>
+                                                </div>
+                                            </div>
+                                            <div class="col s3 company-desc">
+                                                <div class="switch">
+                                                    <label>
+                                                        <input type="checkbox">
+                                                        <span class="lever"></span>
+                                                    </label>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </li>
+
+                                    <li class="collection-item">
+                                        <div class="view-mode">
+                                            <i class="material-icons editdetail-icon">mode_edit</i>
+                                            <div class="row">
+                                                <div class="col s4">Company Name </div>
+                                                <div class="col s7"><span class="item-detail">Eltundra Trade LTD.</span></div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col s4">Reg No.</div>
+                                                <div class="col s7"><span class="item-detail">DK9999999</span></div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col s4">First Name </div>
+                                                <div class="col s7"><span class="item-detail">Mittie</span></div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col s4">Last Name </div>
+                                                <div class="col s7"><span class="item-detail">Clyton</span></div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col s4">Email </div>
+                                                <div class="col s7"><span class="item-detail">mittie@Eltundra.co.uk</span></div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col s4">Phone </div>
+                                                <div class="col s7"><span class="item-detail">+44 20 653 2548</span></div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col s4">Mobile </div>
+                                                <div class="col s7"><span class="item-detail">+44 78 5684 2341</span></div>
+                                            </div>
+                                            <div class="row last-row">
+                                                <div class="col s4">Website </div>
+                                                <div class="col s7"><span class="item-detail">www.eltundra.co.uk</span></div>
+                                            </div>
+                                        </div>
+                                        <div class="edit-mode">
+                                            <i class="material-icons updatedetail-icon">&#xE876;</i>
+                                            <div class="row">
+                                                <div class="col s4">Company Name </div>
+                                                <div class="col s7"><input id="company_name" name="company_name" type="text"  value="EltuLTDndra Trade LTD."></div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col s4">Reg No.</div>
+                                                <div class="col s7"><input id="reg_no" name="reg_no" type="text"  value="DK9999999"></div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col s4">First Name </div>
+                                                <div class="col s7"><input id="first_name" name="first_name" type="text"  value="Mittie"></div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col s4">Last Name </div>
+                                                <div class="col s7"><input id="last_name" name="last_name" type="text"  value="Clyton"></div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col s4">Email </div>
+                                                <div class="col s7"><input id="email" name="email" type="text"  value="mittie@Eltundra.co.uk"></div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col s4">Phone </div>
+                                                <div class="col s7"><input id="phone" name="phone" type="text"  value="+44 20 653 2548"></div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col s4">Mobile </div>
+                                                <div class="col s7"><input id="mobile" name="mobile" type="text"  value="+44 78 5684 2341"></div>
+                                            </div>
+                                            <div class="row last-row">
+                                                <div class="col s4">Website </div>
+                                                <div class="col s7"><input id="website" name="website" type="text"  value="www.eltundra.co.uk"></div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="collection-item">
+                                        <div class="view-mode">
+                                             <i class="material-icons editdetail-icon">mode_edit</i>
+                                            <div class="row">
+                                                <div class="col s4">Address </div>
+                                                <div class="col s7"><span class="item-detail">******26</span></div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col s4">City </div>
+                                                <div class="col s7"><span class="item-detail">*******</span></div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col s4">Country </div>
+                                                <div class="col s7"><span class="item-detail">********</span></div>
+                                            </div>
+                                            <div class="row last-row">
+                                                <div class="col s4">Postal Code </div>
+                                                <div class="col s7"><span class="item-detail">hyuofm87juys925</span></div>
+                                            </div>
+                                        </div>
+                                        <div class="edit-mode">
+                                            <i class="material-icons updatedetail-icon">&#xE876;</i>
+                                            <div class="row">
+                                                <div class="col s4">Address </div>
+                                                <div class="col s7"><input id="address" name="address" type="text"  value="******26"></div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col s4">City </div>
+                                                <div class="col s7"><input id="city" name="city" type="text"  value="*******"></div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col s4">Country </div>
+                                                <div class="col s7"><input id="country" name="country" type="text"  value="********"></div>
+                                            </div>
+                                            <div class="row last-row">
+                                                <div class="col s4">Postal Code </div>
+                                                <div class="col s7"><input id="postal_code" name="postal_code" type="text"  value="hyuofm87juys925"></div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="collection-item">
+                                        <div class="view-mode">
+                                            <i class="material-icons editdetail-icon">mode_edit</i>
+                                            <div class="row">
+                                                <div class="col s4">Nature Of Trade </div>
+                                                <div class="col s7"><span class="item-detail">Cosmtics Products</span></div>
+                                            </div>
+                                            <div class="row last-row">
+                                                <div class="col s4">Contract Level </div>
+                                                <div class="col s7">
+                                                    <span class="item-detail">A - fulfilment + Hard Packaging</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="edit-mode">
+                                            <i class="material-icons updatedetail-icon">&#xE876;</i>
+                                            <div class="row">
+                                                <div class="col s4">Nature Of Trade </div>
+                                                <div class="col s7"><input id="nature_of_trade" name="nature_of_trade" type="text"  value="Cosmtics Products"></div>
+                                            </div>
+                                            <div class="row last-row">
+                                                <div class="col s4">Contract Level </div>
+                                                <div class="col s7">
+                                                    <span class="item-detail"><input id="contract_level" name="contract_level" type="text"  value="A - fulfilment + Hard Packaging"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="collection-item">                                                                                                  <div class="row user-info last-row">
+                                            <div class="col s12">
+                                                <table class="customer-table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th data-field="id">Users</th>
+                                                            <th data-field="name">Name</th>
+                                                            <th data-field="password">Password</th>
+                                                            <th data-field="password">Last Activity</th>
+                                                        </tr>
+                                                    </thead>
+
+                                                    <tbody>
+                                                        <tr>
+                                                            <td><img src="images/yuna.jpg" alt="" class="circle"></td>
+                                                            <td>Mittie</td>
+                                                            <td>*******5</td>
+                                                            <td>20 Min Ago</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><img src="images/yuna.jpg" alt="" class="circle"></td>
+                                                            <td>Ben</td>
+                                                            <td>*******5</td>
+                                                            <td>Yesterday</td>
+                                                        </tr>
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col s5 financial">
+                        <md-toolbar class="finance-card _md _md-toolbar-transitions">
+                            <div class="md-toolbar-tools">
+                                <h2>
+                                    <span>Financial</span>
+                                </h2>
+                                <span flex="" class="flex"></span>
+
+                            </div>
+                        </md-toolbar>
+                        <div class="card finance-detail bx-shadow">
+                            <div class="card-content">
+                                <div class="finance-basic-detail">
+                                    <div class="row">
+                                        <div class="col s6">Payment Method</div>
+                                        <div class="col s6"><span>Visa</span></div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col s6">Terms</div>
+                                        <div class="col s6"><span>30 Days</span></div>
+                                    </div>
+                                    <div class="row last-row">
+                                        <div class="col s6">Price Plan</div>
+                                        <div class="col s6"><span>A 2016</span></div>
+                                    </div>
+                                </div>
+                                <div class="finance-basic-detail">
+                                    <div class="row finance-table">
+                                        <div class="col s12">
+                                            <table>
+                                                <thead>
+                                                    <tr>
+                                                        <th data-field="id">Date</th>
+                                                        <th data-field="name">Type</th>
+                                                        <th data-field="password">Number</th>
+                                                        <th data-field="password">Amount</th>
+                                                    </tr>
+                                                </thead>
+
+                                                <tbody>
+                                                    <tr>
+                                                        <td>10.2.2016</td>
+                                                        <td>invoice</td>
+                                                        <td>20154987</td>
+                                                        <td>-&pound;560</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>10.2.2016</td>
+                                                        <td>Payment</td>
+                                                        <td>20154987</td>
+                                                        <td>&pound;560</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>10.2.2016</td>
+                                                        <td>invoice</td>
+                                                        <td>20154987</td>
+                                                        <td>-&pound;560</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>10.2.2016</td>
+                                                        <td>Payment</td>
+                                                        <td>20154987</td>
+                                                        <td>&pound;560</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>10.2.2016</td>
+                                                        <td>invoice</td>
+                                                        <td>20154987</td>
+                                                        <td>-&pound;560</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>10.2.2016</td>
+                                                        <td>Payment</td>
+                                                        <td>20154987</td>
+                                                        <td>&pound;560</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>10.2.2016</td>
+                                                        <td>invoice</td>
+                                                        <td>20154987</td>
+                                                        <td>-&pound;560</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>10.2.2016</td>
+                                                        <td>Payment</td>
+                                                        <td>20154987</td>
+                                                        <td>&pound;560</td>
+                                                    </tr>
+
+                                                </tbody>
+                                            </table>                               
+                                        </div>                                
+                                    </div>
+                                </div>
+                                <div class="total-amount">
+                                    <div class="row last-row">
+                                        <div class="col s6">
+                                            <span class="balance-text">Balance</span>
+                                        </div>
+                                        <div class="col s6">
+                                            <span class="total-payment">-&pound;2640.67</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- Active APP End -->
+            </div><!-- Container End -->
+        </div><!-- Main End -->
+        
+
+
+<!--Import jQuery before materialize js-->
+<script type="text/javascript" src="js/materialize.min.js"></script>
+<!-- Angular Lib js -->
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
+
+<!-- Angular Material Library -->
+<script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
+<!-- Load Page App  -->
+<script type="text/javascript">
+    (function () {
+        'use strict';
+        angular
+                .module('customerDetail', ['ngMaterial'])
+                // Theme Config
+                .config(function ($mdThemingProvider) {
+                    $mdThemingProvider.theme('default')
+                            .primaryPalette('blue', {
+                                'default': 'A700'
+                            })
+                            .accentPalette('blue', {
+                                'default': 'A700'
+                            });
+                })
+
+        // PAGE IS FULLY LOADED  
+        $(window).load(function () {
+            $('#progress-overlay').fadeOut();
+        });
+
+        // Edit view on edit icon click
+        $('.editdetail-icon').click(function(){
+            $(this).parents('.collection-item').children('.view-mode').slideUp();
+            $(this).parents('.collection-item').children('.edit-mode').slideDown();
+        });
+
+        $('.updatedetail-icon').click(function(){
+            console.log('test');
+           $(this).parents('.collection-item').children('.view-mode').slideDown();
+           $(this).parents('.collection-item').children('.edit-mode').slideUp();
+        });
+    })();
+</script>
+</body>
+</html>

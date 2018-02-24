@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html >
+    <head>
+        <meta charset="utf-8">
+        <title>orders - RIYO OFM</title>
+
+        <!-- Metas -->
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" content="">
+        <meta name="keywords" content="">
+        <!-- View Port for responsive -->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+        <!-- Import Google Icon Font -->
+        <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <!-- Import Angular Material -->
+        <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css">
+        <!-- Import Materialize CSS -->
+        <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+        <link type="text/css" rel="stylesheet" href="css/custom.css"/>
+
+        <!-- Import jQuery Lib -->
+        <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    </head>
+
+    <body style="width: 200px;" ng-app="demonstrateissue">
+        <div class="" ng-controller="MainCtrl">
+            <a href="#" id="testid" ng-click="changeContent()">test</a> <br />
+            <div class="testtest"><state-selector></state-selector></div>
+            <div class="testing"></div> 
+        </div>
+        
+        <!--Import jQuery before materialize js-->
+        <script type="text/javascript" src="js/materialize.min.js"></script>
+        <!-- Angular Lib js -->
+        <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
+
+        <!-- Angular Material Library -->
+        <script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.1/angular-material.min.js"></script>
+        <!-- Load Page App  -->
+        <script type="text/javascript">
+console.log("Scripts loading... ");
+
+// Here's a skeleton app.  Fork this plunk, or create your own from scratch.
+var app = angular.module('demonstrateissue', ['ngMaterial']);
+
+app.directive("stateSelector", function() {
+  return {
+    restrict: "E",
+    template: '  <md-select ng-model="ctrl.userState" aria-label="test"> ' +
+              '     <md-option ng-repeat="state in ctrl.states" ng-value="state.abbrev" ng-disabled="$index === 1">{{state.abbrev}}</md-option>' +
+              '  </md-select>',
+    
+    controller: function($scope) {
+        this.userState = '';
+        this.states = ('AL AK AZ AR CA CO CT DE FL GA HI ID IL IN IA KS KY LA ME MD MA MI MN MS ' +
+            'MO MT NE NV NH NJ NM NY NC ND OH OK OR PA RI SC SD TN TX UT VT VA WA WV WI ' +
+            'WY').split(' ').map(function (state) { return { abbrev: state }; });
+            
+    },
+    controllerAs: "ctrl"
+  }
+});
+
+app.controller('MainCtrl', function($scope,$compile) {
+
+  $scope.changeContent = function () {
+      var data1 = angular.element(document.querySelector(".testtest")).html();
+      var dataorder = $compile(data1)($scope);
+      
+      angular.element(document.querySelector('.testing')).html(dataorder).html();
+  };
+
+});
+
+//        $('#testid').click(function(){
+//                var a = $('.testtest').html();
+//                var b = '<div state-selector></div>';  
+//                 $('.testing').html(a);
+//               
+//                var scope =  angular.element($(".testing state-selector")).scope();
+//                scope.$apply();
+//                
+//                var sidenav_data = angular.element(document.querySelector(".testing"));
+//                var ordercardhtml = sidenav_data.html();
+//            
+
+//        var injector = angular.injector(['ng','demonstrateissue']);
+//        injector.invoke(function($compile, $rootScope) {        
+//             $compile(ordercardhtml)($rootScope);
+//             $rootScope.$apply();
+//            
+//        });
+
+/*var injector = $('[ng-app]').injector();
+var $compile = injector.get('$compile');
+var $rootScope = injector.get('$rootScope');
+$compile(this)($rootScope);
+$rootScope.$digest();
+$('.testing').html(b);
+updateMap(); */
+       // });
+        </script>                                    
+    </body>
+</html>

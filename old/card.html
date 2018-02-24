@@ -1,0 +1,322 @@
+<html lang="en" class="ng-scope">
+<head>
+<title>Angular</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Angular Material style sheet -->
+  <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  
+</head>
+<body ng-app="myNewApp">
+<div ng-controller="AppCtrl" ng-cloak >
+  <!-- Start Header -->
+    <md-toolbar>
+        <!-- Start Main header -->
+        <div class="md-padding" layout-xs="column" layout="row">
+            <!-- Start logo -->
+            <div flex-xs flex-gt-xs="20">
+                RIYO OFM
+            </div>
+            <!-- End logo -->
+            <!-- Start Menu -->        
+            <div flex-xs flex-gt-xs="60">
+                <md-menu>
+                    <md-button ng-click="card.html" class="md-icon-button" aria-label="Open sample menu">
+                        Dashboard
+                    </md-button>
+                    <md-button ng-click="ng.html" class="md-icon-button" aria-label="Open sample menu">
+                        Inventory
+                    </md-button>
+                    <md-button ng-click="" class="md-icon-button" aria-label="Open sample menu">
+                        Orders
+                    </md-button>
+                    <md-button ng-click="" class="md-icon-button" aria-label="Open sample menu">
+                        Integrations
+                    </md-button>
+                    <md-button ng-click="" class="md-icon-button" aria-label="Open sample menu">
+                        Customers
+                    </md-button>
+                </md-menu>
+            </div>
+            <!-- End Menu -->
+            <!-- Start Header last section -->
+            <div flex-xs flex-gt-xs="20">
+                YOAV
+            </div>
+            <!-- End Header last section -->
+        </div>
+        <!-- End Main header -->
+        
+        <!-- Start Subheader -->
+        <div layout-align="center center">
+        <md-subheader class="md-no-sticky">
+               <md-input-container>
+                    <label>Status</label>
+                    <md-select ng-model="status" name="status">
+                        <md-option value="all">All</md-option>
+                        <md-option value="publish">Publish</md-option>
+                        <md-option value="unpublish">Unpublish</md-option>
+                    </md-select>
+                </md-input-container>
+                <md-input-container>
+                    <label>Dates</label>
+                    <md-select ng-model="dates" name="dates">
+                        <md-option value="all">Auto</md-option>
+                    </md-select>
+                </md-input-container>
+                <md-input-container>
+                    <label>Channel</label>
+                    <md-select ng-model="channel" name="channel">
+                        <md-option value="all">All</md-option>
+                    </md-select>
+                </md-input-container>
+                <md-input-container>
+                    <label>Name</label>
+                    <input type="text"/>
+                </md-input-container>
+                    <md-icon style="color:#000">search</md-icon>
+            
+        </md-subheader>
+        </div>
+        <!-- End Subheader -->
+        
+    </md-toolbar>
+  <!-- End Header -->
+  
+  <!--- Start Card design content-->
+  <md-content class="md-padding" layout-xs="column" layout="row">
+    <div flex-xs flex-gt-xs="20" layout="column">
+        <span class="md-title">New(4)</span>
+      <md-card md-theme="{{ showDarkTheme ? 'dark-grey' : 'default' }}" md-theme-watch>
+        <md-card-title>
+          <md-card-title-text>
+              <span class="md-caption">O.N 201661035</span>
+              <span class="md-caption">Amazon Shukiy amz439642</span>
+              <span class="md-caption">Myrtie Schmidt</span>
+              <span class="md-caption">492 Haven Shores Apt. 638</span>
+              <span class="md-caption">Liechtenstein</span>
+              <span class="md-subhead">Products: 2 Quantity: 3 Weight: 5Kg</span>
+          </md-card-title-text>
+        </md-card-title>        
+      </md-card>
+        
+      <md-card md-theme="{{ showDarkTheme ? 'dark-grey' : 'default' }}" md-theme-watch>
+        <md-card-title>
+          <md-card-title-text>
+              <span class="md-caption">O.N 201661035</span>
+              <span class="md-caption">Amazon Shukiy amz439642</span>
+              <span class="md-caption">Myrtie Schmidt</span>
+              <span class="md-caption">492 Haven Shores Apt. 638</span>
+              <span class="md-caption">Liechtenstein</span>
+              <span class="md-subhead">Products: 2 Quantity: 3 Weight: 5Kg</span>
+          </md-card-title-text>
+        </md-card-title>        
+      </md-card>
+      
+      <md-card md-theme="{{ showDarkTheme ? 'dark-grey' : 'default' }}" md-theme-watch>
+        <md-card-title>
+          <md-card-title-text>
+              <span class="md-caption">O.N 201661035</span>
+              <span class="md-caption">Amazon Shukiy amz439642</span>
+              <span class="md-caption">Myrtie Schmidt</span>
+              <span class="md-caption">492 Haven Shores Apt. 638</span>
+              <span class="md-caption">Liechtenstein</span>
+              <span class="md-subhead">Products: 2 Quantity: 3 Weight: 5Kg</span>
+          </md-card-title-text>
+        </md-card-title>        
+      </md-card>
+        
+      <md-card md-theme="{{ showDarkTheme ? 'dark-grey' : 'default' }}" md-theme-watch>
+        <md-card-title>
+          <md-card-title-text>
+              <span class="md-caption">O.N 201661035</span>
+              <span class="md-caption">Amazon Shukiy amz439642</span>
+              <span class="md-caption">Myrtie Schmidt</span>
+              <span class="md-caption">492 Haven Shores Apt. 638</span>
+              <span class="md-caption">Liechtenstein</span>
+              <span class="md-subhead">Products: 2 Quantity: 3 Weight: 5Kg</span>
+          </md-card-title-text>
+        </md-card-title>        
+      </md-card>
+    </div>
+      
+    <div flex-xs flex-gt-xs="20" layout="column">
+      <span class="md-title">Packaging(3)</span>
+      <md-card md-theme="{{ showDarkTheme ? 'dark-grey' : 'default' }}" md-theme-watch>
+        <md-card-title>
+          <md-card-title-text>
+              <span class="md-caption">O.N 201661035</span>
+              <span class="md-caption">Amazon Shukiy amz439642</span>
+              <span class="md-caption">Myrtie Schmidt</span>
+              <span class="md-caption">492 Haven Shores Apt. 638</span>
+              <span class="md-caption">Liechtenstein</span>
+              <span class="md-subhead">Products: 2 Quantity: 3 Weight: 5Kg</span>
+          </md-card-title-text>
+        </md-card-title>        
+      </md-card>
+      
+      <md-card md-theme="{{ showDarkTheme ? 'dark-grey' : 'default' }}" md-theme-watch>
+        <md-card-title>
+          <md-card-title-text>
+              <span class="md-caption">O.N 201661035</span>
+              <span class="md-caption">Amazon Shukiy amz439642</span>
+              <span class="md-caption">Myrtie Schmidt</span>
+              <span class="md-caption">492 Haven Shores Apt. 638</span>
+              <span class="md-caption">Liechtenstein</span>
+              <span class="md-subhead">Products: 2 Quantity: 3 Weight: 5Kg</span>
+          </md-card-title-text>
+        </md-card-title>        
+      </md-card>
+      
+      <md-card md-theme="{{ showDarkTheme ? 'dark-grey' : 'default' }}" md-theme-watch>
+        <md-card-title>
+          <md-card-title-text>
+              <span class="md-caption">O.N 201661035</span>
+              <span class="md-caption">Amazon Shukiy amz439642</span>
+              <span class="md-caption">Myrtie Schmidt</span>
+              <span class="md-caption">492 Haven Shores Apt. 638</span>
+              <span class="md-caption">Liechtenstein</span>
+              <span class="md-subhead">Products: 2 Quantity: 3 Weight: 5Kg</span>
+          </md-card-title-text>
+        </md-card-title>        
+      </md-card>
+    </div>
+      
+    <div flex-xs flex-gt-xs="20" layout="column">
+      <span class="md-title">Dispatch(5)</span>
+      <md-card md-theme="{{ showDarkTheme ? 'dark-grey' : 'default' }}" md-theme-watch>
+        <md-card-title>
+          <md-card-title-text>
+             <span class="md-caption">O.N 201661035</span>
+              <span class="md-caption">Amazon Shukiy amz439642</span>
+              <span class="md-caption">Myrtie Schmidt</span>
+              <span class="md-caption">492 Haven Shores Apt. 638</span>
+              <span class="md-caption">Liechtenstein</span>
+              <span class="md-subhead">Products: 2 Quantity: 3 Weight: 5Kg</span>
+          </md-card-title-text>
+        </md-card-title>        
+      </md-card>
+      <md-card md-theme="{{ showDarkTheme ? 'dark-grey' : 'default' }}" md-theme-watch>
+        <md-card-title>
+          <md-card-title-text>
+             <span class="md-caption">O.N 201661035</span>
+              <span class="md-caption">Amazon Shukiy amz439642</span>
+              <span class="md-caption">Myrtie Schmidt</span>
+              <span class="md-caption">492 Haven Shores Apt. 638</span>
+              <span class="md-caption">Liechtenstein</span>
+              <span class="md-subhead">Products: 2 Quantity: 3 Weight: 5Kg</span>
+          </md-card-title-text>
+        </md-card-title>        
+      </md-card>
+      <md-card md-theme="{{ showDarkTheme ? 'dark-grey' : 'default' }}" md-theme-watch>
+        <md-card-title>
+          <md-card-title-text>
+             <span class="md-caption">O.N 201661035</span>
+              <span class="md-caption">Amazon Shukiy amz439642</span>
+              <span class="md-caption">Myrtie Schmidt</span>
+              <span class="md-caption">492 Haven Shores Apt. 638</span>
+              <span class="md-caption">Liechtenstein</span>
+              <span class="md-subhead">Products: 2 Quantity: 3 Weight: 5Kg</span>
+          </md-card-title-text>
+        </md-card-title>        
+      </md-card>
+      <md-card md-theme="{{ showDarkTheme ? 'dark-grey' : 'default' }}" md-theme-watch>
+        <md-card-title>
+          <md-card-title-text>
+             <span class="md-caption">O.N 201661035</span>
+              <span class="md-caption">Amazon Shukiy amz439642</span>
+              <span class="md-caption">Myrtie Schmidt</span>
+              <span class="md-caption">492 Haven Shores Apt. 638</span>
+              <span class="md-caption">Liechtenstein</span>
+              <span class="md-subhead">Products: 2 Quantity: 3 Weight: 5Kg</span>
+          </md-card-title-text>
+        </md-card-title>        
+      </md-card>
+      <md-card md-theme="{{ showDarkTheme ? 'dark-grey' : 'default' }}" md-theme-watch>
+        <md-card-title>
+          <md-card-title-text>
+             <span class="md-caption">O.N 201661035</span>
+              <span class="md-caption">Amazon Shukiy amz439642</span>
+              <span class="md-caption">Myrtie Schmidt</span>
+              <span class="md-caption">492 Haven Shores Apt. 638</span>
+              <span class="md-caption">Liechtenstein</span>
+              <span class="md-subhead">Products: 2 Quantity: 3 Weight: 5Kg</span>
+          </md-card-title-text>
+        </md-card-title>        
+      </md-card>
+    </div>
+      
+    <div flex-xs flex-gt-xs="20" layout="column">
+      <span class="md-title">Out Of Stock(1)</span>
+      <md-card md-theme="{{ showDarkTheme ? 'dark-grey' : 'default' }}" md-theme-watch>
+        <md-card-title>
+          <md-card-title-text>
+              <span class="md-caption">O.N 201661035</span>
+              <span class="md-caption">Amazon Shukiy amz439642</span>
+              <span class="md-caption">Myrtie Schmidt</span>
+              <span class="md-caption">492 Haven Shores Apt. 638</span>
+              <span class="md-caption">Liechtenstein</span>
+              <span class="md-subhead">Products: 2 Quantity: 3 Weight: 5Kg</span>
+          </md-card-title-text>
+        </md-card-title>        
+      </md-card>
+    </div>
+      
+    <div flex-xs flex-gt-xs="20" layout="column">
+        <span class="md-title">Returns(3)</span>
+      <md-card md-theme="{{ showDarkTheme ? 'dark-grey' : 'default' }}" md-theme-watch>
+        <md-card-title>
+          <md-card-title-text>
+             <span class="md-caption">O.N 201661035</span>
+              <span class="md-caption">Amazon Shukiy amz439642</span>
+              <span class="md-caption">Myrtie Schmidt</span>
+              <span class="md-caption">492 Haven Shores Apt. 638</span>
+              <span class="md-caption">Liechtenstein</span>
+              <span class="md-subhead">Products: 2 Quantity: 3 Weight: 5Kg</span>
+          </md-card-title-text>
+        </md-card-title>        
+      </md-card>
+        
+      <md-card md-theme="{{ showDarkTheme ? 'dark-grey' : 'default' }}" md-theme-watch>
+        <md-card-title>
+          <md-card-title-text>
+             <span class="md-caption">O.N 201661035</span>
+              <span class="md-caption">Amazon Shukiy amz439642</span>
+              <span class="md-caption">Myrtie Schmidt</span>
+              <span class="md-caption">492 Haven Shores Apt. 638</span>
+              <span class="md-caption">Liechtenstein</span>
+              <span class="md-subhead">Products: 2 Quantity: 3 Weight: 5Kg</span>
+          </md-card-title-text>
+        </md-card-title>        
+      </md-card>
+        
+      <md-card md-theme="{{ showDarkTheme ? 'dark-grey' : 'default' }}" md-theme-watch>
+        <md-card-title>
+          <md-card-title-text>
+             <span class="md-caption">O.N 201661035</span>
+              <span class="md-caption">Amazon Shukiy amz439642</span>
+              <span class="md-caption">Myrtie Schmidt</span>
+              <span class="md-caption">492 Haven Shores Apt. 638</span>
+              <span class="md-caption">Liechtenstein</span>
+              <span class="md-subhead">Products: 2 Quantity: 3 Weight: 5Kg</span>
+          </md-card-title-text>
+        </md-card-title>        
+      </md-card>
+    </div>
+  </md-content>
+  <!--- End Card design content-->
+</div>
+    
+  
+  <!-- Angular Material requires Angular.js Libraries -->
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
+
+  <!-- Angular Material Library -->
+  <script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
+  <script src="js/script.js"></script>
+</body>
+</html>

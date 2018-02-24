@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Integrations - RIYO OFM</title>
+
+        <!-- Metas -->
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" content="">
+        <meta name="keywords" content="">
+        <!-- View Port for responsive -->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <!-- Import Google Icon Font -->
+        <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <!-- Import Angular Material -->
+        <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css">
+        <!-- Import Materialize CSS -->
+        <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+        <!-- Import custom CSS -->
+        <link type="text/css" rel="stylesheet" href="css/custom.css"/>
+
+        <!-- Import jQuery Lib -->
+        <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    </head>
+
+    <body class="integration-page" ng-app="integrations">
+    <div id="progress-overlay">
+            <div layout="row" layout-sm="column" layout-align="space-around">
+                <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+            </div>
+     </div>       
+    <div class="devsite-wrapper">
+        <header>
+           <!-- Header Start -->
+                <div class="header">
+                    <div class="app-logo">
+                        <a href="index.html" class="logo">RIYO OFM</a>
+                    </div>
+                    <div class="container">
+                        <nav class="nav-extended">
+                            <div class="nav-wrapper">
+                                <ul class="left hide-on-med-and-down custom-nav">
+                                    <li><a href="index.html" class="waves-effect waves-light">Dashboard</a></li>
+                                    <li><a href="inventory.html" class="waves-effect waves-light">Inventory</a></li>
+                                    <li><a href="orders.html" class="waves-effect waves-light">Orders</a></li>
+                                    <li class="active"><a href="integrations.html" class="waves-effect waves-light">Integrations</a></li>
+                                    <li><a href="customers.html" class="waves-effect waves-light">Customers</a></li>
+                                </ul>
+                            </div>
+                    </div>
+                </nav>
+                <div class="usermenu">
+                    <a class="dropdown-button" href="#!" data-activates="umenu">YOAV<i class="material-icons right">arrow_drop_down</i></a>
+                    <ul id="umenu" class="dropdown-content">
+                        <li><a href="#!">My Profile</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#!">Account Settings</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#!">Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+            <!-- Header End -->
+
+            <!-- Sub Header Start -->
+            <div class="sub-header">
+                <div class="container">
+                    <div class="row no-btm-margin">
+                        <div class="col s2" ng-controller="catFilterController" ng-cloak>
+                            <md-input-container>
+                                <label>Category</label>
+                                <md-select ng-model="selectedCats"
+                                           md-on-close="clearSearchTerm()"
+                                           data-md-container-class="selectdemoSelectHeader"
+                                           multiple>
+                                    <md-select-header class="search-select-header">
+                                        <input ng-model="searchTerm"
+                                               type="search"
+                                               placeholder="Search for a Category.."
+                                               class="demo-header-searchbox md-text">
+                                    </md-select-header>
+                                    <md-optgroup label="cats">
+                                        <md-option ng-selected="{{cat == 'All'}}" ng-value="cat" ng-repeat="cat in cats |
+                                                   filter:searchTerm">{{cat}}</md-option>
+                                    </md-optgroup>
+                                </md-select>
+                            </md-input-container>
+                        </div>
+
+                        <div class="col s2" ng-controller="custFilterController" ng-cloak>
+                            <md-input-container>
+                                <label>Customer</label>
+                                <md-select ng-model="selectedCustomers"
+                                           md-on-close="clearSearchTerm()"
+                                           data-md-container-class="selectdemoSelectHeader"
+                                           multiple>
+                                    <md-select-header class="search-select-header">
+                                        <input ng-model="searchTerm"
+                                               type="search"
+                                               placeholder="Search for a Customer.."
+                                               class="demo-header-searchbox md-text">
+                                    </md-select-header>
+                                    <md-optgroup label="customers">
+                                        <md-option ng-selected="{{customer == 'All'}}" ng-value="customer" ng-repeat="customer in customers |
+                                                   filter:searchTerm">{{customer}}</md-option>
+                                    </md-optgroup>
+                                </md-select>
+                            </md-input-container>
+                        </div>
+                        <div class="col s8 autosearch-wrapper" ng-controller="intSearch as ctrl" layout="column" ng-cloak>
+                            <label for="search"><i class="material-icons autosearch">search</i></label>
+                            <form ng-submit="$event.preventDefault()">
+                                <md-autocomplete
+                                    ng-disabled="ctrl.isDisabled"
+                                    md-no-cache="ctrl.noCache"
+                                    md-selected-item="ctrl.selectedItem"
+                                    md-search-text-change="ctrl.searchTextChange(ctrl.searchText)"
+                                    md-search-text="ctrl.searchText"
+                                    md-selected-item-change="ctrl.selectedItemChange(item)"
+                                    md-items="item in ctrl.querySearch(ctrl.searchText)"
+                                    md-item-text="item.display"
+                                    md-min-length="0"
+                                    placeholder="Search Apps..">
+                                    <md-item-template>
+                                        <span md-highlight-text="ctrl.searchText" md-highlight-flags="^i">{{item.display}}</span>
+                                    </md-item-template>
+                                    <md-not-found>
+                                        No Apps matching "{{ctrl.searchText}}" were found.
+                                    </md-not-found>
+                                </md-autocomplete>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Sub Header End -->
+        </header>
+    </div>
+
+    <!-- Main Start -->
+    <div class="intergrations-main main-container">
+        <div class="container">
+            <!-- Active APP Start -->
+            <div class="row active-apps">
+                <div class="col s12 sub-heading">
+                    <h2 class="no-top-margin sub-title">Active Apps <sub>(4)</sub></h2>
+                </div>
+                <div class="col s4">
+                    <div class="card company-details cu-card bx-shadow">
+                        <div class="center card-content">
+                            <div class="int-channel-logo">
+                                <a href="app-details.html"><img src="images/int-amazone.png" alt="amazon"/></a>
+                            </div>
+                            <div class="switch">
+                                <label>
+                                    <input type="checkbox">
+                                    <span class="lever"></span>
+                                </label>
+                            </div>
+                            <span class="int-last-activity">Last Activity: Today 14.39</span>
+                            <div class="int-details">
+                                <span>amazon.com/sguonline</span>
+                                <span>Customer: Stev Rob</span>
+                                <span>Channel: Amazonstevr</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col s4">
+                    <div class="card company-details cu-card bx-shadow">
+                        <div class="center card-content">
+                            <div class="int-channel-logo">
+                                <a href="app-details.html"><img src="images/shopify.jpg" alt="shopify" width="150" /></a>
+                            </div>
+                            <div class="switch">
+                                <label>
+                                    <input type="checkbox">
+                                    <span class="lever"></span>
+                                </label>
+                            </div>
+                            <span class="int-last-activity">Last Activity: Today 14.39</span>
+                            <div class="int-details">
+                                <span>ofirbarck.com</span>
+                                <span>Customer: Ofir Barck LRTD</span>
+                                <span>Channel: ofirShopify</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col s4">
+                    <div class="card company-details cu-card bx-shadow">
+                        <div class="center card-content">
+                            <div class="int-channel-logo">
+                                <a href="app-details.html"><img src="images/ebay.png" alt="ebay" width="150" height="150" /></a>
+                            </div>
+                            <div class="switch">
+                                <label>
+                                    <input type="checkbox">
+                                    <span class="lever"></span>
+                                </label>
+                            </div>
+                            <span class="int-last-activity">Last Activity: Today 14.39</span>
+                            <div class="int-details">
+                                <span>ebay.com/ofirbarckltd</span>
+                                <span>Customer: Ofir Barck LRTD</span>
+                                <span>Channel: ebayofir</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Active APP End -->
+
+            <!-- APP Store Start -->
+            <div class="row apps-store">
+                <div class="col s12 sub-heading">
+                    <h2 class="sub-title">Apps Store <sub>(4)</sub></h2>
+                </div>
+                <div class="col s3">
+                    <div class="card company-details cu-card bx-shadow">
+                        <div class="center card-content">
+                            <div class="int-channel-logo">
+                                <img src="images/amazon.jpg" alt="" width="100" height="100" />
+                            </div>
+                            <div class="switch">
+                                <label>
+                                    <input type="checkbox" checked="checked">
+                                    <span class="lever"></span>
+                                </label>
+                            </div>
+                            <div class="int-details">Integrate AliExpress Sales Channel</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col s3">
+                    <div class="card company-details cu-card bx-shadow">
+                        <div class="center card-content">
+                            <div class="int-channel-logo">
+                                <img src="images/amazon.jpg" alt="" width="100" height="100" />
+                            </div>
+                            <div class="switch">
+                                <label>
+                                    <input type="checkbox" checked="checked">
+                                    <span class="lever"></span>
+                                </label>
+                            </div>
+                            <div class="int-details">Integrate WooCommerce Store</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col s3">
+                    <div class="card company-details cu-card bx-shadow">
+                        <div class="center card-content">
+                            <div class="int-channel-logo">
+                                <img src="images/amazon.jpg" alt="" width="100" height="100" />
+                            </div>
+                            <div class="switch">
+                                <label>
+                                    <input type="checkbox" checked="checked">
+                                    <span class="lever"></span>
+                                </label>
+                            </div>
+                            <div class="int-details">Integrate Magento Store</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col s3">
+                    <div class="card company-details cu-card bx-shadow">
+                        <div class="center card-content">
+                            <div class="int-channel-logo">
+                                <img src="images/amazon.jpg" alt="" width="100" height="100" />
+                            </div>
+                            <div class="switch">
+                                <label>
+                                    <input type="checkbox" checked="checked">
+                                    <span class="lever"></span>
+                                </label>
+                            </div>
+                            <div class="int-details">Integrate Prestashop Store</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- APP Store End -->
+        </div> <!-- Container End -->
+    </div>
+    <!-- Main End -->
+
+    <!--Import jQuery before materialize js-->
+    <script type="text/javascript" src="js/materialize.min.js"></script>
+    <!-- Angular Lib js -->
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
+
+    <!-- Angular Material Library -->
+    <script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
+    <!-- Load Page App  -->
+    <script type="text/javascript">
+        (function () {
+            'use strict';
+            angular
+            .module('integrations', ['ngMaterial'])
+            // Theme Config
+            .config(function($mdThemingProvider) {
+              $mdThemingProvider.theme('default')
+                .primaryPalette('blue',{
+                    'default': 'A700'
+                    })
+                 .accentPalette('blue', {
+                  'default': 'A700'
+                });
+            })
+            .controller('intSearch', intSearch)
+
+            // Category Filter
+            .controller('catFilterController', function($scope, $element) {
+                $scope.cats = ['All', 'Amazon' ,'Shopify' ,'Flipkart', 'WooCommerce' ];
+                $scope.searchTerm;
+                $scope.clearSearchTerm = function() {
+                    $scope.searchTerm = '';
+                };
+                // The md-select directive eats keydown events for some quick select
+                // logic. Since we have a search input here, we don't need that logic.
+                $element.find('input').on('keydown', function(ev) {
+                    ev.stopPropagation();
+                });
+            })
+
+            // Customer Filter
+            .controller('custFilterController', function($scope, $element) {
+                $scope.customers = ['All', 'Amazon' ,'Shopify' ,'Flipkart', 'WooCommerce' ];
+                $scope.searchTerm;
+                $scope.clearSearchTerm = function() {
+                    $scope.searchTerm = '';
+                };
+                // The md-select directive eats keydown events for some quick select
+                // logic. Since we have a search input here, we don't need that logic.
+                $element.find('input').on('keydown', function(ev) {
+                    ev.stopPropagation();
+                });
+            })
+            
+            function intSearch ($timeout, $q, $log) {
+                var self = this;
+
+                self.simulateQuery = false;
+                self.isDisabled    = false;
+
+                // list of `state` value/display objects
+                self.states        = loadAll();
+                self.querySearch   = querySearch;
+                self.selectedItemChange = selectedItemChange;
+                self.searchTextChange   = searchTextChange;
+
+                self.newState = newState;
+
+                function newState(state) {
+                    alert("Sorry! You'll need to create a Constitution for " + state + " first!");
+                }
+
+                // ******************************
+                // Internal methods
+                // ******************************
+
+                /**
+                 * Search for states... use $timeout to simulate
+                 * remote dataservice call.
+                 */
+                function querySearch (query) {
+                    var results = query ? self.states.filter( createFilterFor(query) ) : self.states,
+                    deferred;
+                    if (self.simulateQuery) {
+                        deferred = $q.defer();
+                        $timeout(function () { deferred.resolve( results ); }, Math.random() * 1000, false);
+                        return deferred.promise;
+                    } else {
+                        return results;
+                    }
+                }
+
+                function searchTextChange(text) {
+                    $log.info('Text changed to ' + text);
+                }
+
+                function selectedItemChange(item) {
+                    $log.info('Item changed to ' + JSON.stringify(item));
+                }
+
+                /**
+                 * Build `states` list of key/value pairs
+                 */
+                function loadAll() {
+                    var allStates = 'Shopify, Amazon, Woocomerce, Ebay, Ali Express';
+
+                    return allStates.split(/, +/g).map( function (state) {
+                        return {
+                            value: state.toLowerCase(),
+                            display: state
+                        };
+                    });
+                }
+
+                /**
+                 * Create filter function for a query string
+                 */
+                function createFilterFor(query) {
+                    var lowercaseQuery = angular.lowercase(query);
+
+                    return function filterFn(state) {
+                        return (state.value.indexOf(lowercaseQuery) === 0);
+                    };
+
+                }
+            }
+            
+          /*mouseover change depth*/
+           $("div.bx-shadow").mouseover(function(){
+                $(this).addClass('bx-shadow-depth2');
+                $(this).removeClass('bx-shadow');
+           }).mouseout(function() {
+                $(this).addClass('bx-shadow');
+                $(this).removeClass('bx-shadow-depth2');
+           });;
+           
+           // PAGE IS FULLY LOADED  
+           $(window).load(function(){
+                $('#progress-overlay').fadeOut();
+           });
+           
+        })();
+    </script>
+</body>
+</html>

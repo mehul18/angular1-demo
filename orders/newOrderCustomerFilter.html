@@ -1,0 +1,17 @@
+<md-input-container>
+    <label>customer</label>
+    <md-select ng-model="selectedChannels"
+               md-on-close="clearSearchTerm()"
+               data-md-container-class="selectdemoSelectHeader"
+               multiple placeholder="customer">
+        <md-select-header class="search-select-header">
+            <input ng-model="searchTerm"
+                   type="search"
+                   placeholder="Search for a Channel.."
+                   class="demo-header-searchbox md-text">
+        </md-select-header>
+        <md-optgroup label="channels" default-option="customer">
+            <md-option  ng-value="customer" ng-repeat="customer in customers|filter:searchTerm">{{customer}}</md-option>
+        </md-optgroup>
+    </md-select>
+</md-input-container>

@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Dashboard - RIYO OFM</title>
+
+        <!-- Metas -->
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" content="">
+        <meta name="keywords" content="">
+        <!-- View Port for responsive -->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <!-- Import Google Icon Font -->
+        <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <!-- Import Angular Material -->
+        <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css">
+        <!-- Import Materialize CSS -->
+        <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+        <!-- Import custom CSS -->
+        <link type="text/css" rel="stylesheet" href="css/custom.css"/>
+
+        <!-- Import jQuery Lib -->
+        <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    </head>
+
+    <body class="app-dashboard">
+       <div id="progress-overlay">
+            <div layout="row" layout-sm="column" layout-align="space-around">
+                <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+            </div>
+        </div> 
+        <div class="devsite-wrapper">
+         <header>       
+            <!-- Header Start -->
+            <div class="header">
+                <div class="app-logo">
+                    <a href="index.html" class="logo">RIYO OFM</a>
+                </div>
+                <div class="container">
+                    <nav class="nav-extended">
+                        <div class="nav-wrapper">
+                            <ul class="left hide-on-med-and-down custom-nav">
+                                <li class="active"><a href="index.html" class="waves-effect waves-light">Dashboard</a></li>
+                                <li><a href="inventory.html" class="waves-effect waves-light">Inventory</a></li>
+                                <li><a href="orders.html" class="waves-effect waves-light">Orders</a></li>
+                                <li><a href="integrations.html" class="waves-effect waves-light">Integrations</a></li>
+                                <li><a href="customers.html" class="waves-effect waves-light">Customers</a></li>
+                            </ul>
+                        </div>
+                    </nav>
+                </div>
+                <div class="usermenu">
+                    <a class="dropdown-button" href="#!" data-activates="umenu">YOAV<i class="material-icons right">arrow_drop_down</i></a>
+                    <ul id="umenu" class="dropdown-content">
+                        <li><a href="#!">My Profile</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#!">Account Settings</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#!">Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+            <!-- Header End -->
+         </header>
+        </div>
+
+        <!-- Main Start -->
+        <div class="dashboard-main">
+            <div class="container">
+                <div class="row">
+                    <div class="col s8">
+                        <div class="card company-details cu-card Large bx-shadow">
+                            <div class="center card-content">
+                                <p>Alerts</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col s4">
+                        <div class="card company-details Large cu-card bx-shadow">
+                            <div class="center card-content">
+                                <p>User/Company<br>Details</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col s12">
+                        <div class="card horizontal Large bx-shadow">
+                            <div class="col s3 card-content">
+                                <div class="section order-performance">
+                                    <h6>Order Performance</h6>
+                                </div>
+
+                            </div>
+                            <div class="order-details card-content col s5">
+                                <div class="section">
+                                    <h6>This Month</h6>
+                                    <p>367 Orders <span class="this-month"><i class="small material-icons">trending_up</i> 16.5%</span></p>
+
+                                </div>
+                            </div>
+                            <div class="order-details card-content col s5">
+                                <div class="section">
+                                    <h6>Last Month</h6>
+                                    <p>306 Orders <span class="last-month"><i class="small material-icons">trending_down</i> 2.4%</span></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="col s8">
+                        <div class="card cu-card product-sec Large bx-shadow">
+                            <div class="center card-content">
+                                <p>Most Selling<br> Products</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col s4">
+                        <div class="card Large product-sec cu-card bx-shadow">
+                            <div class="center card-content">
+                                <p>Sales Per<br>Channel</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col s2">
+                        <div class="card ">
+                            <div class="center ofm-option card-content bx-shadow">
+                                <i class="small material-icons">add_shopping_cart</i>
+                                <h6>Submit New</h6>
+                                <p>Order</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col s2">
+                        <div class="card ">
+                            <div class="center ofm-option card-content bx-shadow">
+                                <i class="small material-icons">add_box</i>
+                                <h6>Submit New</h6>
+                                <p>Product</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col s2">
+                        <div class="card ">
+                            <div class="center ofm-option card-content bx-shadow">
+                                <i class="small material-icons">playlist_add</i>
+                                <h6>Create Shipment</h6>
+                                <p>To Stock</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col s2">
+                        <div class="card ">
+                            <div class="center ofm-option card-content bx-shadow">
+                                <i class="small material-icons">settings_applications</i>
+                                <h6>Set-up New </h6>
+                                <p>Salse Channel</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col s2">
+                        <div class="card ">
+                            <div class="center ofm-option card-content bx-shadow">
+                                <i class="small material-icons">headset_mic</i>
+                                <h6>Create New</h6>
+                                <p>Service Ticket</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col s2">
+                        <div class="card ">
+                            <div class="center ofm-option card-content bx-shadow">
+                                <i class="small material-icons">live_help</i>
+                                <h6>Get</h6>
+                                <p>Support</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Main End -->
+
+        <!--Import jQuery before materialize js-->
+        <script type="text/javascript" src="js/materialize.min.js"></script>
+        <!-- Angular Lib js -->
+        <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
+
+        <!-- Angular Material Library -->
+        <script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
+        <script type="text/javascript">
+        (function () {
+            // PAGE IS FULLY LOADED  
+            $(window).load(function () {
+                $('#progress-overlay').fadeOut();
+            });
+        })();
+    </script>
+    </body>
+</html>

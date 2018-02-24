@@ -1,0 +1,2076 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>orders - RIYO OFM</title>
+
+        <!-- Metas -->
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" content="">
+        <meta name="keywords" content="">
+        <!-- View Port for responsive -->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- Import Google Icon Font -->
+        <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <!-- Import Angular Material -->
+        <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css">
+        <!-- Import Materialize CSS -->
+        <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+        <link type="text/css" rel="stylesheet" href="css/custom.css"/>
+
+        <!-- Import jQuery Lib -->
+        <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    </head>
+
+    <body class="orders-page" ng-app="orders">
+        <div id="progress-overlay">
+            <div layout="row" layout-sm="column" layout-align="space-around">
+                <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+            </div>
+        </div>
+
+        <div class="devsite-wrapper">
+            <header>
+                <!-- Header Start -->
+                <div class="header">
+                    <div class="app-logo">
+                        <a href="index.html" class="logo">RIYO OFM</a>
+                    </div>
+                    <div class="container">
+                        <nav class="nav-extended">
+                            <div class="nav-wrapper">
+                                <ul class="left hide-on-med-and-down custom-nav">
+                                    <li><a href="index.html" class="waves-effect waves-light">Dashboard</a></li>
+                                    <li><a href="inventory.html" class="waves-effect waves-light">Inventory</a></li>
+                                    <li class="active"><a href="orders.html" class="waves-effect waves-light">Orders</a></li>
+                                    <li><a href="integrations.html" class="waves-effect waves-light">Integrations</a></li>
+                                    <li><a href="customers.html" class="waves-effect waves-light">Customers</a></li>
+                                </ul>
+                            </div>
+                    </div>
+                    </nav>
+                    <div class="usermenu">
+                        <a class="dropdown-button" href="#!" data-activates="umenu">YOAV<i class="material-icons right">arrow_drop_down</i></a>
+                        <ul id="umenu" class="dropdown-content">
+                            <li><a href="#!">My Profile</a></li>
+                            <li class="divider"></li>
+                            <li><a href="#!">Account Settings</a></li>
+                            <li class="divider"></li>
+                            <li><a href="#!">Logout</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- Header End -->
+
+                <!-- Sub Header Start -->
+                <div class="sub-header">
+                    <div class="container">
+                        <div class="row no-btm-margin">
+                            <div class="col s2" ng-controller="StatusController" ng-cloak>
+                                <md-input-container>
+                                    <label>Status</label>
+                                    <md-select name="status" ng-model="status">
+                                        <md-option value="all" ng-selected="true">All</md-option>
+                                        <md-option value="active">Active</md-option>
+                                        <md-option value="inactive">Inactive</md-option>
+                                    </md-select>
+                                </md-input-container>
+                            </div>
+
+                            <div class="col s2" ng-controller="dateFilterCntrl" ng-cloak>
+                                <md-input-container>
+                                    <label>Date</label> 
+                                    <md-select name="order_date" ng-model="dateFilter" class="order_date" ng-change="getSelectedText()">
+                                        <md-option value="1" ng-selected="true">Past hour</md-option>
+                                        <md-option value="4">Past 4 hours</md-option>
+                                        <md-option value="7">Past 7 hours</md-option>
+                                        <md-option value="30">Past 30 days</md-option>
+                                        <md-option value="80">Past 80 days</md-option>
+                                        <md-option value="custom" class="custome-date">Custom Time Range</md-option>
+                                    </md-select>
+                                </md-input-container>
+                            </div>
+                            <div class="col s2" ng-controller="orderFilterController" ng-cloak>
+                                <md-input-container>
+                                    <label>Channel</label>
+                                    <md-select ng-model="selectedChannels"
+                                               md-on-close="clearSearchTerm()"
+                                               data-md-container-class="selectdemoSelectHeader"
+                                               multiple placeholder="All">
+                                        <md-select-header class="search-select-header">
+                                            <input ng-model="searchTerm"
+                                                   type="search"
+                                                   placeholder="Search for a Channel.."
+                                                   class="demo-header-searchbox md-text">
+                                        </md-select-header>
+                                        <md-optgroup label="channels" default-option="All">
+                                            <md-option  ng-value="channel" ng-repeat="channel in channels|filter:searchTerm">{{channel}}</md-option>
+                                        </md-optgroup>
+                                    </md-select>
+                                </md-input-container>
+                            </div>
+                            <div class="col s5 autosearch-wrapper" ng-controller="orderSearch as ctrl" layout="column" ng-cloak>
+                                <label for="search"><i class="material-icons autosearch">search</i></label>
+                                <form ng-submit="$event.preventDefault()">
+                                    <md-autocomplete
+                                        ng-disabled="ctrl.isDisabled"
+                                        md-no-cache="ctrl.noCache"
+                                        md-selected-item="ctrl.selectedItem"
+                                        md-search-text-change="ctrl.searchTextChange(ctrl.searchText)"
+                                        md-search-text="ctrl.searchText"
+                                        md-selected-item-change="ctrl.selectedItemChange(item)"
+                                        md-items="item in ctrl.querySearch(ctrl.searchText)"
+                                        md-item-text="item.display"
+                                        md-min-length="0"
+                                        placeholder="Search Orders..">
+                                        <md-item-template>
+                                            <span md-highlight-text="ctrl.searchText" md-highlight-flags="^i">{{item.display}}</span>
+                                        </md-item-template>
+                                        <md-not-found>
+                                            No Apps matching "{{ctrl.searchText}}" were found.
+                                        </md-not-found>
+                                    </md-autocomplete>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Sub Header End -->
+            </header>
+        </div>
+
+        <!-- Main Start -->
+        <div class="orders-main main-container">
+            <div class="orders-all-detail" ng-controller="AppCtrl">
+                <!-- New Orders-->
+                <div class="col s3 order-cards card-new">
+
+                    <h2 class="sub-title">New  <sub>(5)</sub></h2>
+                    <a href="#" data-id="new-order-card" ng-click="neworderright($event, 'open')">
+                        <div class="order-details card-panel bx-shadow">
+                            <div class="section">
+                                <ul>
+                                    <li>O.N 201661035 <span class="order-date">Jan 2016 05</span></li>
+                                    <li>Amazon Shukly amz439642</li>
+                                    <li><span class="order-name">Mytrie Schmidt</span></li>
+                                    <li>492 Haven Shores Apt. 638</li>
+                                    <li>Liechtenstein</li>   
+                                    <li class="order-prod-item">
+                                        <span class="order-prod">Product: 2</span> 
+                                        <span class="order-prod">Quantity: 3</span>
+                                        <span class="order-prod">Weight: 5kg</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </a>
+                    <div class="order-details card-panel bx-shadow">
+                        <div class="section">
+                            <ul>
+                                <li>O.N 201661035 <span class="order-date">Jan 2016 05</span></li>
+                                <li>Amazon Shukly amz439642</li>
+                                <li><span class="order-name">Mytrie Schmidt</span></li>
+                                <li>492 Haven Shores Apt. 638</li>
+                                <li>Liechtenstein</li>   
+                                <li class="order-prod-item">
+                                    <span class="order-prod">Product: 2</span> 
+                                    <span class="order-prod">Quantity: 3</span>
+                                    <span class="order-prod">Weight: 5kg</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="order-details card-panel bx-shadow">
+                        <div class="section">
+                            <ul>
+                                <li>O.N 201661035 <span class="order-date">Jan 2016 05</span></li>
+                                <li>Amazon Shukly amz439642</li>
+                                <li><span class="order-name">Mytrie Schmidt</span></li>
+                                <li>492 Haven Shores Apt. 638</li>
+                                <li>Liechtenstein</li>   
+                                <li class="order-prod-item">
+                                    <span class="order-prod">Product: 2</span> 
+                                    <span class="order-prod">Quantity: 3</span>
+                                    <span class="order-prod">Weight: 5kg</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Packaging -->
+                <div class="col s3 order-cards card-packaging">
+                    <h2 class="sub-title">Packaging  <sub>(5)</sub></h2>
+                    <div class="all-packaing-order">
+                        <a href="#" data-id="packaging-order-card" ng-click="neworderright($event, 'open')">
+                            <div class="order-details card-panel bx-shadow">
+                                <div class="section">
+                                    <ul>
+                                        <li>O.N 201661035 <span class="order-date">Jan 2016 05</span></li>
+                                        <li>Amazon Shukly amz439642</li>
+                                        <li><span class="order-name">Mytrie Schmidt</span></li>
+                                        <li>492 Haven Shores Apt. 638</li>
+                                        <li>Liechtenstein</li>   
+                                        <li class="order-prod-item">
+                                            <span class="order-prod">Product: 2</span> 
+                                            <span class="order-prod">Quantity: 3</span>
+                                            <span class="order-prod">Weight: 5kg</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </a>
+                        <div class="order-details card-panel bx-shadow">
+                            <div class="section">
+                                <ul>
+                                    <li>O.N 201661035 <span class="order-date">Jan 2016 05</span></li>
+                                    <li>Amazon Shukly amz439642</li>
+                                    <li><span class="order-name">Mytrie Schmidt</span></li>
+                                    <li>492 Haven Shores Apt. 638</li>
+                                    <li>Liechtenstein</li>   
+                                    <li class="order-prod-item">
+                                        <span class="order-prod">Product: 2</span> 
+                                        <span class="order-prod">Quantity: 3</span>
+                                        <span class="order-prod">Weight: 5kg</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+
+                        <div class="order-details card-panel bx-shadow">
+                            <div class="section">
+                                <ul>
+                                    <li>O.N 201661035 <span class="order-date">Jan 2016 05</span></li>
+                                    <li>Amazon Shukly amz439642</li>
+                                    <li><span class="order-name">Mytrie Schmidt</span></li>
+                                    <li>492 Haven Shores Apt. 638</li>
+                                    <li>Liechtenstein</li>   
+                                    <li class="order-prod-item">
+                                        <span class="order-prod">Product: 2</span> 
+                                        <span class="order-prod">Quantity: 3</span>
+                                        <span class="order-prod">Weight: 5kg</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dispatch -->
+                <div class="col s3 order-cards card-dispatch">
+                    <h2 class="sub-title">Dispatch  <sub>(5)</sub></h2>
+                    <a href="#" data-id="dispatch-order-card" ng-click="neworderright($event, 'open')">
+                        <div class="order-details card-panel bx-shadow">
+                            <div class="section">
+                                <ul>
+                                    <li>O.N 201661035 <span class="order-date">Jan 2016 05</span></li>
+                                    <li>Amazon Shukly amz439642</li>
+                                    <li><span class="order-name">Mytrie Schmidt</span></li>
+                                    <li>492 Haven Shores Apt. 638</li>
+                                    <li>Liechtenstein</li>   
+                                    <li class="order-prod-item">
+                                        <span class="order-prod">Product: 2</span> 
+                                        <span class="order-prod">Quantity: 3</span>
+                                        <span class="order-prod">Weight: 5kg</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </a>
+                    <div class="order-details card-panel bx-shadow">
+                        <div class="section">
+                            <ul>
+                                <li>O.N 201661035 <span class="order-date">Jan 2016 05</span></li>
+                                <li>Amazon Shukly amz439642</li>
+                                <li><span class="order-name">Mytrie Schmidt</span></li>
+                                <li>492 Haven Shores Apt. 638</li>
+                                <li>Liechtenstein</li>   
+                                <li class="order-prod-item">
+                                    <span class="order-prod">Product: 2</span> 
+                                    <span class="order-prod">Quantity: 3</span>
+                                    <span class="order-prod">Weight: 5kg</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="order-details card-panel bx-shadow">
+                        <div class="section">
+                            <ul>
+                                <li>O.N 201661035 <span class="order-date">Jan 2016 05</span></li>
+                                <li>Amazon Shukly amz439642</li>
+                                <li><span class="order-name">Mytrie Schmidt</span></li>
+                                <li>492 Haven Shores Apt. 638</li>
+                                <li>Liechtenstein</li>   
+                                <li class="order-prod-item">
+                                    <span class="order-prod">Product: 2</span> 
+                                    <span class="order-prod">Quantity: 3</span>
+                                    <span class="order-prod">Weight: 5kg</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Out of Stock -->
+                <div class="col s3 order-cards card-oos">
+                    <h2 class="sub-title">Out of Stock <sub>(5)</sub></h2>
+                    <a href="#" data-id="outofstock-order-card" ng-click="neworderright($event, 'open')">
+                        <div class="order-details card-panel bx-shadow">
+                            <div class="section">
+                                <ul>
+                                    <li>O.N 201661035 <span class="order-date">Jan 2016 05</span></li>
+                                    <li>Amazon Shukly amz439642</li>
+                                    <li><span class="order-name">Mytrie Schmidt</span></li>
+                                    <li>492 Haven Shores Apt. 638</li>
+                                    <li>Liechtenstein</li>   
+                                    <li class="order-prod-item">
+                                        <span class="order-prod">Product: 2</span> 
+                                        <span class="order-prod">Quantity: 3</span>
+                                        <span class="order-prod">Weight: 5kg</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </a>
+
+                    <div class="order-details card-panel bx-shadow">
+                        <div class="section">
+                            <ul>
+                                <li>O.N 201661035 <span class="order-date">Jan 2016 05</span></li>
+                                <li>Amazon Shukly amz439642</li>
+                                <li><span class="order-name">Mytrie Schmidt</span></li>
+                                <li>492 Haven Shores Apt. 638</li>
+                                <li>Liechtenstein</li>   
+                                <li class="order-prod-item">
+                                    <span class="order-prod">Product: 2</span> 
+                                    <span class="order-prod">Quantity: 3</span>
+                                    <span class="order-prod">Weight: 5kg</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="order-details card-panel bx-shadow">
+                        <div class="section">
+                            <ul>
+                                <li>O.N 201661035 <span class="order-date">Jan 2016 05</span></li>
+                                <li>Amazon Shukly amz439642</li>
+                                <li><span class="order-name">Mytrie Schmidt</span></li>
+                                <li>492 Haven Shores Apt. 638</li>
+                                <li>Liechtenstein</li>   
+                                <li class="order-prod-item">
+                                    <span class="order-prod">Product: 2</span> 
+                                    <span class="order-prod">Quantity: 3</span>
+                                    <span class="order-prod">Weight: 5kg</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Returns -->
+                <div class="col s3 order-cards card-returns">
+                    <h2 class="sub-title">Returns  <sub>(5)</sub></h2>
+                    <div class="order-details card-panel bx-shadow">
+                        <div class="section">
+                            <ul>
+                                <li>O.N 201661035 <span class="order-date">Jan 2016 05</span></li>
+                                <li>Amazon Shukly amz439642</li>
+                                <li><span class="order-name">Mytrie Schmidt</span></li>
+                                <li>492 Haven Shores Apt. 638</li>
+                                <li>Liechtenstein</li>   
+                                <li class="order-prod-item">
+                                    <span class="order-prod">Product: 2</span> 
+                                    <span class="order-prod">Quantity: 3</span>
+                                    <span class="order-prod">Weight: 5kg</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="order-details card-panel bx-shadow">
+                        <div class="section">
+                            <ul>
+                                <li>O.N 201661035 <span class="order-date">Jan 2016 05</span></li>
+                                <li>Amazon Shukly amz439642</li>
+                                <li><span class="order-name">Mytrie Schmidt</span></li>
+                                <li>492 Haven Shores Apt. 638</li>
+                                <li>Liechtenstein</li>   
+                                <li class="order-prod-item">
+                                    <span class="order-prod">Product: 2</span> 
+                                    <span class="order-prod">Quantity: 3</span>
+                                    <span class="order-prod">Weight: 5kg</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="order-details card-panel bx-shadow">
+                        <div class="section">
+                            <ul>
+                                <li>O.N 201661035 <span class="order-date">Jan 2016 05</span></li>
+                                <li>Amazon Shukly amz439642</li>
+                                <li><span class="order-name">Mytrie Schmidt</span></li>
+                                <li>492 Haven Shores Apt. 638</li>
+                                <li>Liechtenstein</li>   
+                                <li class="order-prod-item">
+                                    <span class="order-prod">Product: 2</span> 
+                                    <span class="order-prod">Quantity: 3</span>
+                                    <span class="order-prod">Weight: 5kg</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Default SideNav -->
+                <md-sidenav class="common-sidenav md-sidenav-right" md-component-id="csidenav"
+                            md-disable-backdrop md-whiteframe="6" id="sidenav" ng-cloak>
+                </md-sidenav>   
+
+
+                <!-- slide out card for new order !-->
+                <md-sidenav class="new-order-card md-sidenav-right" md-component-id="new-order"
+                            md-disable-backdrop md-whiteframe="16" id="new-order-card" ng-cloak>
+
+                    <div class="col s12 m12 neworder-content">
+                        <md-toolbar class="order-card _md _md-toolbar-transitions" id="new-order">
+                            <div class="md-toolbar-tools">
+                                <h2>
+                                    <span>New Order <br/>201671024</span>
+                                </h2>
+                                <span flex="" class="flex"></span>
+
+                                <md-button class="ew-close-button md-icon-button md-button md-ink-ripple new-order-close" data-id="csidenav"><i class="material-icons">more_vert</i></md-button>
+                                <md-button ng-click="neworderright($event, 'close')" class="ew-close-button md-icon-button md-button md-ink-ripple new-order-close" data-id="csidenav"><i class="material-icons">cancel</i></md-button>
+
+                            </div>
+                        </md-toolbar>
+                        <md-content>
+                            <div class="card order-detail">
+                                <div class="card-content">
+                                    <div class="new-order-content">
+                                        <div class="order-basic-detail">
+                                            <div class="row">
+                                                <div class="col s4">Recieved</div>
+                                                <div class="col s8"><span>12:56 PM 27.8.2016</span></div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col s4">Channel</div>
+                                                <div class="col s8"><span>Amazon Shukiy</span></div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col s4">Seller ID</div>
+                                                <div class="col s8"><span>Steve7842941</span></div>
+                                            </div>
+                                            <div class="row last-row">
+                                                <div class="col s4">Order ID</div>
+                                                <div class="col s8">
+                                                    <span>amz439642</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="customer-detail">
+                                            <div class="row">
+                                                <div class="col s4">Customer</div>
+                                                <div class="col s8"><span>Mytrie Schmidt</span></div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col s4">Address</div>
+                                                <div class="col s8">
+                                                    <span>492 Haven Shores Apt<br/>Potuino ,638</span>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col s4">Country</div>
+                                                <div class="col s8"><span>liechtenstein</span></div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col s4">Email</div>
+                                                <div class="col s8"><span>pietro_waeichi@hotmail.com</span></div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col s4">Phone</div>
+                                                <div class="col s8"><span>+44 512-333-0605</span></div>
+                                            </div>
+                                            <div class="row last-row">
+                                                <div class="col s4">Note</div>
+                                                <div class="col s8"><span>Leave By the Doorway</span></div>
+                                            </div>
+                                        </div>
+                                        <div class="order-product">
+                                            <div class="row">
+                                                <div class="col s4 product-image">
+                                                    <img src="images/order-product.png">
+                                                </div>
+                                                <div class="col s8">
+                                                    <ul class="order-product-desc">
+                                                        <li>
+                                                            <span class="product-name">MOFRED@ iphone7 [4.7 Inch]<br/>Tempered Glass Protector</span>
+                                                        </li>
+                                                        <li>By <span> MOFRED</span></li>
+                                                        <li>Quantity <span> 2 </span>(31)</li>
+                                                        <li>Color <span>Black</span></li>
+                                                        <li>Size <span>XL</span></li>
+                                                    </ul>
+                                                    <ul class="other-info">
+                                                        <li>Dimension :<span> w30 d50 h25</span></li>
+                                                        <li>Weight :<span> 2.5 Kg</span></li>
+                                                        <li>Warehouse locator :<span> D15 A</span></li>
+                                                        <li>Sku :<span> 574362195</span></li>
+                                                        <li>Barcode :<span> 7638194</span></li>
+
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            <div class="row second-product">
+                                                <div class="col s4 product-image">
+                                                    <img src="images/watch.jpg">
+                                                </div>
+                                                <div class="col s8">
+                                                    <ul class="order-product-desc">
+                                                        <li><span class="product-name">Garmin Forerunner 235 GPS</span></li>
+                                                        <li>By <span> Garmin</span></li>
+                                                        <li>Quantity <span> 1 </span>(83)</li>
+                                                        <li>Color <span>Black / Frost Blue</span></li>
+                                                    </ul>
+                                                    <ul class="other-info">
+                                                        <li>Dimension :<span> w30 d50 h25</span></li>
+                                                        <li>Weight :<span> 2.5kg</span></li>
+                                                        <li>Warehouse locator :<span> D15 A</span></li>
+                                                        <li>Sku :<span> 574362195</span></li>
+                                                        <li>Barcode :<span> </span></li>
+
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="order-total-detail">
+                                        <div class="order-total">
+                                            <div class="row">
+                                                <div class="col s12">
+                                                    <span class="order-span">Total Product <span class="order-count"> 2 </span></span>|
+                                                    <span class="order-span">Total Quantity <span class="order-count"> 3 </span></span> |
+                                                    <span class="order-span">Total Weight <span class="order-count"> 5kg</span></span>
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                        <div class="delivering-company">                           
+                                            <div class="row packaging">
+                                                <div class="col s12">
+                                                    <md-button ng-click="showpackageorderToast()" class="waves-effect waves-light btn packaging-btn remov-shadow">Packaging</md-button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </md-content>
+                    </div>
+                </md-sidenav>
+                <!-- end slide out card for new order !-->
+
+                <!-- slide out div for packaging order !-->
+                <md-sidenav class="packaging-order md-sidenav-right" md-component-id="package-order"
+                            md-disable-backdrop md-whiteframe="6" id="packaging-order-card" ng-cloak>
+                    <div class="col s12 m12 packagingorder-content">
+                        <md-toolbar class="packaging-order-card _md _md-toolbar-transitions" id="packaging-order">
+                            <div class="md-toolbar-tools">
+                                <h2>
+                                    <span>Packaging Order <br/>201671024</span>
+                                </h2>
+                                <span flex="" class="flex"></span>
+
+                                <md-button class="new-close-button md-icon-button md-button md-ink-ripple" data-id="csidenav"><i class="material-icons">more_vert</i></md-button>
+                                <md-button ng-click="neworderright($event, 'close')" class="new-close-button md-icon-button md-button md-ink-ripple" data-id="csidenav"><i class="material-icons">cancel</i></md-button>
+
+                            </div>
+                        </md-toolbar>
+                        <md-content>
+                            <div class="card packaging-order-detail">
+                                <div class="card-content">
+                                    <div class="packaging-order-content">
+                                        <div class="order-basic-detail">
+                                            <div class="row">
+                                                <div class="col s4">Recieved</div>
+                                                <div class="col s8"><span>12:56 PM 27.8.2016</span></div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col s4">Channel</div>
+                                                <div class="col s8"><span>FlipKart Shukiy</span></div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col s4">Seller ID</div>
+                                                <div class="col s8"><span>Test7842941</span></div>
+                                            </div>
+                                            <div class="row last-row">
+                                                <div class="col s4">Order ID</div>
+                                                <div class="col s8">
+                                                    <span>xyz439642</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="customer-detail">
+                                            <div class="row">
+                                                <div class="col s4">Customer</div>
+                                                <div class="col s8"><span>Maria Schmidt</span></div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col s4">Address</div>
+                                                <div class="col s8">
+                                                    <span>492 Haven Shores Apt<br/>Potuino ,638</span>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col s4">Country</div>
+                                                <div class="col s8"><span>Tesksxfg</span></div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col s4">Email</div>
+                                                <div class="col s8"><span>pietro_waeichi@hotmail.com</span></div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col s4">Phone</div>
+                                                <div class="col s8"><span>+44 512-333-0605</span></div>
+                                            </div>
+                                            <div class="row last-row">
+                                                <div class="col s4">Note</div>
+                                                <div class="col s8"><span>Leave By the Doorway</span></div>
+                                            </div>
+                                        </div>
+                                        <div class="order-product">
+                                            <div class="row">
+                                                <div class="col s4 product-image">
+                                                    <img src="images/order-product.png">
+                                                </div>
+                                                <div class="col s8">
+                                                    <ul class="order-product-desc">
+                                                        <li>
+                                                            <span class="prod-checkbox"> 
+                                                                <input type="checkbox" class="filled-in" id="filled-in-box" checked="checked">
+                                                                <label for="filled-in-box"></label>
+                                                            </span>
+                                                        </li>
+                                                        <li>
+                                                            <span class="product-name">MOFRED@ iphone7 [4.7 Inch]<br/>Tempered Glass Protector</span>
+                                                        </li>
+                                                        <li>By <span> MOFRED</span></li>
+                                                        <li>Quantity <span> 2 </span>(31)</li>
+                                                        <li>Color <span>Black</span></li>
+                                                        <li>Size <span>XL</span></li>
+                                                    </ul>
+                                                    <ul class="other-info">
+                                                        <li>Dimension :<span> w30 d50 h25</span></li>
+                                                        <li>Weight :<span> 2.5 Kg</span></li>
+                                                        <li>Warehouse locator :<span> D15 A</span></li>
+                                                        <li>Sku :<span> 574362195</span></li>
+                                                        <li>Barcode :<span> 7638194</span></li>
+
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            <div class="row second-product">
+                                                <div class="col s4 product-image">
+                                                    <img src="images/watch.jpg">
+                                                </div>
+                                                <div class="col s8">
+                                                    <ul class="order-product-desc">
+                                                        <li>
+                                                            <span class="prod-checkbox"> 
+                                                                <input type="checkbox" class="filled-in" id="filled-in-box2">
+                                                                <label for="filled-in-box2"></label>
+                                                            </span>                                        
+                                                        </li>
+                                                        <li>
+                                                            <span class="product-name">Garmin Forerunner 235 GPS</span>
+                                                        </li>
+                                                        <li>By <span> Garmin</span></li>
+                                                        <li>Quantity <span> 1 </span>(83)</li>
+                                                        <li>Color <span>Black / Frost Blue</span></li>
+                                                    </ul>
+                                                    <ul class="other-info">
+                                                        <li>Dimension :<span> w30 d50 h25</span></li>
+                                                        <li>Weight :<span> 2.5kg</span></li>
+                                                        <li>Warehouse locator :<span> D15 A</span></li>
+                                                        <li>Sku :<span> 574362195</span></li>
+                                                        <li>Barcode :<span> </span></li>
+
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="order-total-detail">
+                                        <div class="order-total">
+                                            <div class="row">
+                                                <div class="col s12">
+                                                    <span class="order-span">Total Product <span class="order-count"> 2 </span></span>|
+                                                    <span class="order-span">Total Quantity <span class="order-count"> 3 </span></span> |
+                                                    <span class="order-span">Total Weight <span class="order-count"> 5kg</span></span>
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                        <div class="delivering-company">
+                                            <div class="row">
+                                                <div class="col s6 first-col">
+                                                    <select class="browser-default">
+                                                        <option value="" selected>Choose your option</option>
+                                                        <option value="1">Option 1</option>
+                                                        <option value="2">Option 2</option>
+                                                        <option value="3">Option 3</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col s6">
+                                                    <input placeholder="Trackin Code" id="first_name" type="text" class="validate">
+                                                </div>
+                                            </div>
+                                            <div class="row package-order">
+                                                <div class="col s12">
+                                                    <md-button ng-click="showpackageorderToast()" class="waves-effect waves-light btn packaging-btn remov-shadow">PRINT LABLE</md-button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </md-content>
+                    </div>
+
+                </md-sidenav>
+                <!-- end slide out div for packaging order!-->
+
+                <!-- slide out card for dispatch order !-->
+                <md-sidenav class="dispatch-orders md-sidenav-right"  md-component-id="dispatch-order"
+                            md-disable-backdrop md-whiteframe="16" id="dispatch-order-card" ng-cloak> 
+
+                    <div class="col s12 dispatch-content">
+                        <md-toolbar class="dispatch-order-card _md _md-toolbar-transitions" id="dispatch-order">
+                            <div class="md-toolbar-tools">
+                                <h2>
+                                    <span>Dispatched Order <br/>201671024</span>
+                                </h2>
+                                <span flex="" class="flex"></span>
+                                <md-button data-id="csidenav" class="new-close-button md-icon-button md-button md-ink-ripple"><i class="material-icons">more_vert</i></md-button>
+                                <md-button ng-click="neworderright($event, 'close')" data-id="csidenav" class="new-close-button md-icon-button md-button md-ink-ripple"><i class="material-icons">cancel</i></md-button>
+                            </div>
+                        </md-toolbar>
+                        <md-content>
+                            <div class="card dispatch-order-detail">
+                                <div class="card-content">
+                                    <div class="dispatch-order-content">
+                                        <div class="dispatch-basic-detail">
+                                            <div class="row">
+                                                <div class="col s4">Recieved</div>
+                                                <div class="col s8"><span>12:56 PM 27.8.2016</span></div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col s4">Channel</div>
+                                                <div class="col s8"><span>Amazon Shukiy</span></div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col s4">Seller ID</div>
+                                                <div class="col s8"><span>Steve7842941</span></div>
+                                            </div>
+                                            <div class="row last-row">
+                                                <div class="col s4">Order ID</div>
+                                                <div class="col s8">
+                                                    <span>amz439642</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="customer-detail">
+                                            <div class="row">
+                                                <div class="col s4">Customer</div>
+                                                <div class="col s8"><span>Mytrie Schmidt</span></div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col s4">Address</div>
+                                                <div class="col s8">
+                                                    <span>492 Haven Shores Apt<br/>Potuino ,638</span>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col s4">Country</div>
+                                                <div class="col s8"><span>liechtenstein</span></div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col s4">Email</div>
+                                                <div class="col s8"><span>pietro_waeichi@hotmail.com</span></div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col s4">Phone</div>
+                                                <div class="col s8"><span>+44 512-333-0605</span></div>
+                                            </div>
+                                            <div class="row last-row">
+                                                <div class="col s4">Note</div>
+                                                <div class="col s8"><span>Leave By the Doorway</span></div>
+                                            </div>
+                                        </div>
+                                        <div class="order-product">
+                                            <div class="row">
+                                                <div class="col s4 product-image">
+                                                    <img src="images/order-product.png">
+                                                </div>
+                                                <div class="col s8">
+                                                    <ul class="order-product-desc">
+                                                        <li>
+                                                            <span class="product-name">MOFRED@ iphone7 [4.7 Inch]<br/>Tempered Glass Protector</span>
+                                                        </li>
+                                                        <li>By <span> MOFRED</span></li>
+                                                        <li>Quantity <span> 2 </span>(31)</li>
+                                                        <li>Color <span>Black</span></li>
+                                                        <li>Size <span>XL</span></li>
+                                                    </ul>
+                                                    <ul class="other-info">
+                                                        <li>Dimension :<span> w30 d50 h25</span></li>
+                                                        <li>Weight :<span> 2.5 Kg</span></li>
+                                                        <li>Warehouse locator :<span> D15 A</span></li>
+                                                        <li>Sku :<span> 574362195</span></li>
+                                                        <li>Barcode :<span> 7638194</span></li>
+
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            <div class="row second-product">
+                                                <div class="col s4 product-image">
+                                                    <img src="images/watch.jpg">
+                                                </div>
+                                                <div class="col s8">
+                                                    <ul class="order-product-desc">
+                                                        <li><span class="product-name">Garmin Forerunner 235 GPS</span></li>
+                                                        <li>By <span> Garmin</span></li>
+                                                        <li>Quantity <span> 1 </span>(83)</li>
+                                                        <li>Color <span>Black / Frost Blue</span></li>
+                                                    </ul>
+                                                    <ul class="other-info">
+                                                        <li>Dimension :<span> w30 d50 h25</span></li>
+                                                        <li>Weight :<span> 2.5kg</span></li>
+                                                        <li>Warehouse locator :<span> D15 A</span></li>
+                                                        <li>Sku :<span> 574362195</span></li>
+                                                        <li>Barcode :<span> </span></li>
+
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="order-total-detail">
+                                        <div class="order-total">
+                                            <div class="row">
+                                                <div class="col s12">
+                                                    <span class="order-span">Total Product <span class="order-count"> 2 </span></span>|
+                                                    <span class="order-span">Total Quantity <span class="order-count"> 3 </span></span> |
+                                                    <span class="order-span">Total Weight <span class="order-count"> 5kg</span></span>
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                        <div class="delivering-company">
+                                            <div class="row">
+                                                <div class="col s6 first-col">
+                                                    <ul class="dispatch-info">
+                                                        <li>Dispatch with <span>DHL</span></li>
+                                                        <li><span>11:08 AM 7.10.16</span></li>
+                                                    </ul>
+                                                </div>
+                                                <div class="col s6">
+                                                    <input id="first_name" type="text" class="validate" disabled="disabled" value="26841937264">
+                                                </div>
+                                            </div>
+                                            <div class="row track-parcel">
+                                                <div class="col s12">
+                                                    <md-button ng-click="showtrackToast()" class="waves-effect waves-light btn track-orderbtn remov-shadow">Track Parcel</md-button>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </md-content>
+                    </div>
+                </md-sidenav>
+                <!-- end slide out card for dispatch order!-->
+
+                <!-- slide out card for out of stock order !-->
+                <md-sidenav class="outofstock-orders md-sidenav-right"  md-component-id="outofstock-order"
+                            md-disable-backdrop md-whiteframe="16" id="outofstock-order-card" ng-cloak> 
+
+                    <div class="col s12 outofstock-content">
+                        <md-toolbar class="outofstock-order-card _md _md-toolbar-transitions" id="outofstock-order">
+                            <div class="md-toolbar-tools">
+                                <h2>
+                                    <span>Out Of Stock Order <br/>201671024</span>
+                                </h2>
+                                <span flex="" class="flex"></span>
+                                <md-button data-id="csidenav" class="new-close-button md-icon-button md-button md-ink-ripple"><i class="material-icons">more_vert</i></md-button>
+                                <md-button ng-click="neworderright($event, 'close')" data-id="csidenav" class="new-close-button md-icon-button md-button md-ink-ripple"><i class="material-icons">cancel</i></md-button>
+                            </div>
+                        </md-toolbar>
+                        <md-content>
+                            <div class="card outofstock-order-detail">
+                                <div class="card-content">
+                                    <div class="outofstock-order-content">
+                                        <div class="outofstock-basic-detail">
+                                            <div class="row">
+                                                <div class="col s4">Recieved</div>
+                                                <div class="col s8"><span>12:56 PM 27.8.2016</span></div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col s4">Channel</div>
+                                                <div class="col s8"><span>Amazon Shukiy</span></div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col s4">Seller ID</div>
+                                                <div class="col s8"><span>Steve7842941</span></div>
+                                            </div>
+                                            <div class="row last-row">
+                                                <div class="col s4">Order ID</div>
+                                                <div class="col s8">
+                                                    <span>amz439642</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="customer-detail">
+                                            <div class="row">
+                                                <div class="col s4">Customer</div>
+                                                <div class="col s8"><span>Mytrie Schmidt</span></div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col s4">Address</div>
+                                                <div class="col s8">
+                                                    <span>492 Haven Shores Apt<br/>Potuino ,638</span>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col s4">Country</div>
+                                                <div class="col s8"><span>liechtenstein</span></div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col s4">Email</div>
+                                                <div class="col s8"><span>pietro_waeichi@hotmail.com</span></div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col s4">Phone</div>
+                                                <div class="col s8"><span>+44 512-333-0605</span></div>
+                                            </div>
+                                            <div class="row last-row">
+                                                <div class="col s4">Note</div>
+                                                <div class="col s8"><span>Leave By the Doorway</span></div>
+                                            </div>
+                                        </div>
+                                        <div class="order-product">
+                                            <div class="row">
+                                                <div class="col s4 product-image">
+                                                    <img src="images/order-product.png">
+                                                </div>
+                                                <div class="col s8">
+                                                    <ul class="order-product-desc">
+                                                        <li>
+                                                            <span class="product-name">MOFRED@ iphone7 [4.7 Inch]<br/>Tempered Glass Protector</span>
+                                                        </li>
+                                                        <li>By <span> MOFRED</span></li>
+                                                        <li class="quantity">Quantity <span> 2 </span>(31)</li>
+                                                        <li>Color <span>Black</span></li>
+                                                        <li>Size <span>XL</span></li>
+                                                    </ul>
+                                                    <ul class="other-info">
+                                                        <li>Dimension :<span> w30 d50 h25</span></li>
+                                                        <li>Weight :<span> 2.5 Kg</span></li>
+                                                        <li>Warehouse locator :<span> D15 A</span></li>
+                                                        <li>Sku :<span> 574362195</span></li>
+                                                        <li>Barcode :<span> 7638194</span></li>
+
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            <div class="row second-product">
+                                                <div class="col s4 product-image">
+                                                    <img src="images/watch.jpg">
+                                                </div>
+                                                <div class="col s8">
+                                                    <ul class="order-product-desc">
+                                                        <li><span class="product-name">Garmin Forerunner 235 GPS</span></li>
+                                                        <li>By <span> Garmin</span></li>
+                                                        <li class="quantity">Quantity <span> 1 </span>(83)</li>
+                                                        <li>Color <span>Black / Frost Blue</span></li>
+                                                    </ul>
+                                                    <ul class="other-info">
+                                                        <li>Dimension :<span> w30 d50 h25</span></li>
+                                                        <li>Weight :<span> 2.5kg</span></li>
+                                                        <li>Warehouse locator :<span> D15 A</span></li>
+                                                        <li>Sku :<span> 574362195</span></li>
+                                                        <li>Barcode :<span> </span></li>
+
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="order-total-detail">
+                                        <div class="order-total">
+                                            <div class="row">
+                                                <div class="col s12">
+                                                    <span class="order-span">Total Product <span class="order-count"> 2 </span></span>|
+                                                    <span class="order-span">Total Quantity <span class="order-count"> 3 </span></span> |
+                                                    <span class="order-span">Total Weight <span class="order-count"> 5kg</span></span>
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                        <div class="delivering-company">
+                                            <div class="row">
+                                                <div class="col s6 first-col">
+                                                    <ul class="dispatch-info">
+                                                        <li>Dispatch with <span>DHL</span></li>
+                                                        <li><span>11:08 AM 7.10.16</span></li>
+                                                    </ul>
+                                                </div>
+                                                <div class="col s6">
+                                                    <input id="first_name" type="text" class="validate" disabled="disabled" value="26841937264">
+                                                </div>
+                                            </div>
+                                            <div class="row track-parcel">
+                                                <div class="col s12">
+                                                    <md-button ng-click="showoutofstockToast()" class="waves-effect waves-light btn track-orderbtn remov-shadow">Out of Stock</md-button>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </md-content>
+                    </div>
+                </md-sidenav>
+                <!-- end slide out card for Out of Stock order!-->
+
+                <!-- slide out card for new submit order !-->
+                <md-sidenav class="new-order md-sidenav-right" md-component-id="submit-order"
+                            md-disable-backdrop md-whiteframe="6" id="submit-new-order" ng-cloak>
+
+                    <div class="col s12 m12 neworder-content">
+                        <md-toolbar class="submit-order-card _md _md-toolbar-transitions" id="order-card" flex>
+                            <div class="md-toolbar-tools">
+                                <h2>
+                                    <span>Submit New Order <br/>201671024</span>
+                                </h2>
+                                <span flex="" class="flex"></span>                       
+                                <md-button data-id="csidenav" class="new-close-button md-icon-button md-button md-ink-ripple"><i class="material-icons">more_vert</i></md-button>
+                                <md-button ng-click="neworderright($event, 'close')" data-id="csidenav" class="new-close-button md-icon-button md-button md-ink-ripple"><i class="material-icons">cancel</i></md-button>                              
+                            </div>
+                        </md-toolbar>
+                        <md-content>
+                            <div class="card order-detail">
+                                <div class="card-content">
+                                    <div class="submitorder-detail">
+                                        <div class="submit-order-detail">
+                                            <div class="order-basic-detail">
+                                                <div class="row">
+                                                    <div class="col s4">Recieved</div>
+                                                    <div class="col s8"><span>12:56 PM 27.8.2016</span></div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col s4">Channel</div>
+                                                    <new-order-channel-filter></new-order-channel-filter>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col s4">Seller ID</div>
+                                                    <div class="col s8"><span>Steve7842941</span></div>
+                                                </div>
+                                                <div class="row last-row">
+                                                    <div class="col s4">Order ID</div>
+                                                    <div class="col s8">
+                                                        <input id="order_id" name="order_id" type="text"  value="amz439642">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="customer-detail">
+                                                <div class="row">
+                                                    <div class="col s4">Customer</div>
+                                                    <div class="col s8">
+                                                        <input id="customer_name" name="customer_name" type="text"  value="Mytrie Schmidt">
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col s4">Address</div>
+                                                    <div class="col s8">
+                                                        <textarea id="textarea1" class="materialize-textarea">492 Haven Shores Apt Potuino ,638</textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col s4">Country</div>
+                                                    <div class="col s8">
+                                                        <input id="country" name="country" type="text"  value="liechtenstein">
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col s4">Email</div>
+                                                    <div class="col s8">
+                                                        <input id="email" name="email" type="text" value="pietro_waeichi@hotmail.com">
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col s4">Phone</div>
+                                                    <div class="col s8">
+                                                        <input id="phone" name="phone" type="text" value="+44 512-333-0605">
+                                                    </div>
+                                                </div>
+                                                <div class="row last-row">
+                                                    <div class="col s4">Note</div>
+                                                    <div class="col s8">
+                                                        <input id="note" name="note" type="text" value="Leave By the Doorway">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="order-product">
+                                                <div class="row last-row">
+                                                    <div class="col s12 product-filter-drop" ng-controller="instantSearchCtrl as ctrl" ng-cloak>
+                                                        <md-autocomplete
+                                                            ng-disabled="ctrl.isDisabled"
+                                                            md-no-cache="ctrl.noCache"
+                                                            md-selected-item="ctrl.selectedItem"
+                                                            md-search-text-change="ctrl.searchTextChange(ctrl.searchText)"
+                                                            md-search-text="ctrl.searchText"
+                                                            md-selected-item-change="ctrl.selectedItemChange(item)"
+                                                            md-items="item in ctrl.querySearch(ctrl.searchText)"
+                                                            md-item-text="item.display"
+                                                            md-min-length="0"
+                                                            placeholder="Search For a Product" ng-click="ShowHide()">
+                                                            <md-item-template>
+                                                                <span md-highlight-text="ctrl.searchText" md-highlight-flags="^i">{{item.display}}</span>
+                                                            </md-item-template>
+                                                            <md-not-found>
+                                                                No states matching "{{ctrl.searchText}}" were found.
+                                                                <a ng-click="ctrl.newState(ctrl.searchText)">Create a new one!</a>
+                                                            </md-not-found>
+                                                        </md-autocomplete>
+
+                                                    </div>    
+                                                </div>
+                                                <div class="row submit-order-product last-row">
+                                                    <div class="col s4 product-image">
+                                                        <img src="images/order-product.png">
+                                                    </div>
+                                                    <div class="col s8">
+                                                        <ul class="order-product-desc">
+                                                            <li><span class="product-name">MOFRED@ iphone7 [4.7 Inch]<br/>Tempered Glass Protector</span></li>
+                                                            <li>By <span> MOFRED</span></li>
+                                                            <li>Quantity <span> 2 </span>(31)</li>
+                                                            <li>Color <span>Black</span></li>
+                                                            <li>Size <span>XL</span></li>                                        
+                                                        </ul>
+                                                        <ul class="other-info">
+                                                            <li>Dimension :<span> w30 d50 h25</span></li>
+                                                            <li>Weight :<span> 2.5 Kg</span></li>
+                                                            <li>Warehouse locator :<span> D15 A</span></li>
+                                                            <li>Sku :<span> 574362195</span></li>
+                                                            <li>Barcode :<span> 7638194</span></li>
+
+                                                        </ul>
+                                                    </div>
+                                                </div>                           
+                                            </div>
+                                        </div>                   
+                                        <div class="order-total-detail">
+                                            <div class="order-total">
+                                                <div class="row">
+                                                    <div class="col s12">
+                                                        <span class="order-span">Total Product <span class="order-count"> 1 </span></span>|
+                                                        <span class="order-span">Total Quantity <span class="order-count"> 3 </span></span> |
+                                                        <span class="order-span">Total Weight <span class="order-count"> 5kg</span></span>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+                                            <div class="delivering-company">
+                                                <div class="row packaging">
+                                                    <div class="col s12">
+                                                        <md-button ng-click="showActionToast()" class="waves-effect waves-light btn submit-orderbtn remov-shadow">Submit Order</md-button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="search-product" style="display: none">
+                                        <div class="order-product">
+                                            <div class="row search-prodtitle">
+                                                <div class="col s12 product-filter-drop" ng-controller="instantSearchCtrl as ctrl" ng-cloak>
+                                                    <md-autocomplete
+                                                        ng-disabled="ctrl.isDisabled"
+                                                        md-no-cache="ctrl.noCache"
+                                                        md-selected-item="ctrl.selectedItem"
+                                                        md-search-text-change="ctrl.searchTextChange(ctrl.searchText)"
+                                                        md-search-text="ctrl.searchText"
+                                                        md-selected-item-change="ctrl.selectedItemChange(item)"
+                                                        md-items="item in ctrl.querySearch(ctrl.searchText)"
+                                                        md-item-text="item.display"
+                                                        md-min-length="0"
+                                                        placeholder="Search For a Product">
+                                                        <md-item-template>
+                                                            <span md-highlight-text="ctrl.searchText" md-highlight-flags="^i">{{item.display}}</span>
+                                                        </md-item-template>
+                                                        <md-not-found>
+                                                            No states matching "{{ctrl.searchText}}" were found.
+                                                            <a ng-click="ctrl.newState(ctrl.searchText)">Create a new one!</a>
+                                                        </md-not-found>
+                                                    </md-autocomplete>
+
+                                                </div>    
+                                            </div>
+                                            <div class="row search-filter">
+                                                <div class="col s3" ng-controller="searchcatfilter">
+                                                    <new-order-category-filter></new-order-category-filter>
+                                                </div>
+                                                <div class="col s3" ng-controller="searchcustomerfilter">
+                                                    <new-order-customer-filter></new-order-customer-filter>
+                                                </div>
+                                            </div>
+                                            <ul class="all-product" data-collapsible="accordion">
+                                                <li class="search-result">
+                                                    <div class="collapsible-header">
+                                                        <div class="row search-prod-detail">
+                                                            <div class="col s3 product-image">
+                                                                <img src="images/order-product.png">
+                                                            </div>
+                                                            <div class="col s8">
+                                                                <ul class="order-product-desc">
+                                                                    <li><span class="product-name">MOFRED@ iphone7 [4.7 Inch]<br/>Tempered Glass Protector</span></li>
+                                                                    <li>By <span> MOFRED</span></li>
+                                                                    <li>In Stock <span> 2 </span></li>
+                                                                    <li>Sku <span>123654</span></li>
+                                                                    <li>Barcode <span>70965485</span></li>
+                                                                </ul>
+
+                                                            </div>
+                                                            <div class="col s1">
+                                                                <div class="product-link">
+                                                                    <a href="http://google.com"
+                                                                       title="Launch Google.com in new window"
+                                                                       target="_blank">
+                                                                        <i class="material-icons">&#xE895;</i>
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="collapsible-body">
+                                                        <div class="row">
+                                                            <div class="col s4">&nbsp;</div>
+                                                            <div class="col s8 no-padding">
+                                                                <ul class="order-product-desc">
+                                                                    <li class="product-options">
+                                                                        <div class="row">
+                                                                            <div class="col s4 no-padding">
+                                                                                <md-select ng-model="color" placeholder="Color" class="md-no-underline">
+                                                                                    <md-option value="red">Red</md-option>
+                                                                                    <md-option value="blue">Blue</md-option>
+                                                                                    <md-option value="green">Green</md-option>
+                                                                                    <md-option value="yellow">Yellow</md-option>
+                                                                                </md-select>
+                                                                            </div>    
+                                                                            <div class="col s4 no-padding">
+                                                                                <md-select ng-model="size" placeholder="Size" class="md-no-underline">
+                                                                                    <md-option value="small">Small</md-option>
+                                                                                    <md-option value="medium">Medium</md-option>
+                                                                                    <md-option value="large">Large</md-option>
+                                                                                </md-select>
+                                                                            </div>    
+                                                                            <div class="col s4 no-padding">
+                                                                                <md-select ng-model="qty" placeholder="Quantity" class="md-no-underline">
+                                                                                    <md-option value="1">1</md-option>
+                                                                                    <md-option value="2">2</md-option>
+                                                                                    <md-option value="3">3</md-option>
+                                                                                    <md-option value="4">4</md-option>
+                                                                                </md-select>
+                                                                            </div>
+                                                                        </div>
+                                                                    </li>
+                                                                    <li class="add-product">
+                                                                        <a class="waves-effect waves-light btn">Add</a>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li class="search-result">
+                                                    <div class="collapsible-header">
+                                                        <div class="row search-prod-detail">
+                                                            <div class="col s3 product-image">
+                                                                <img src="images/order-product.png">
+                                                            </div>
+                                                            <div class="col s8">
+                                                                <ul class="order-product-desc">
+                                                                    <li><span class="product-name">MOFRED@ iphone7 [4.7 Inch]<br/>Tempered Glass Protector</span></li>
+                                                                    <li>By <span> MOFRED</span></li>
+                                                                    <li>In Stock <span> 2 </span></li>
+                                                                    <li>Sku <span>123654</span></li>
+                                                                    <li>Barcode <span>70965485</span></li>
+                                                                </ul>
+
+                                                            </div>
+                                                            <div class="col s1">
+                                                                <div class="product-link">
+                                                                    <a href="http://google.com"
+                                                                       title="Launch Google.com in new window"
+                                                                       target="_blank">
+                                                                        <i class="material-icons">&#xE895;</i>
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="collapsible-body">
+                                                        <div class="row">
+                                                            <div class="col s4">&nbsp;</div>
+                                                            <div class="col s8 no-padding">
+                                                                <ul class="order-product-desc">
+                                                                    <li class="product-options">
+                                                                        <div class="row">
+                                                                            <div class="col s4 no-padding">
+                                                                                <md-select ng-model="color" placeholder="Color" class="md-no-underline">
+                                                                                    <md-option value="red">Red</md-option>
+                                                                                    <md-option value="blue">Blue</md-option>
+                                                                                    <md-option value="green">Green</md-option>
+                                                                                    <md-option value="yellow">Yellow</md-option>
+                                                                                </md-select>
+                                                                            </div>    
+                                                                            <div class="col s4 no-padding">
+                                                                                <md-select ng-model="size" placeholder="Size" class="md-no-underline">
+                                                                                    <md-option value="small">Small</md-option>
+                                                                                    <md-option value="medium">Medium</md-option>
+                                                                                    <md-option value="large">Large</md-option>
+                                                                                </md-select>
+                                                                            </div>    
+                                                                            <div class="col s4 no-padding">
+                                                                                <md-select ng-model="qty" placeholder="Quantity" class="md-no-underline">
+                                                                                    <md-option value="1">1</md-option>
+                                                                                    <md-option value="2">2</md-option>
+                                                                                    <md-option value="3">3</md-option>
+                                                                                    <md-option value="4">4</md-option>
+                                                                                </md-select>
+                                                                            </div>
+                                                                        </div>
+                                                                    </li>
+                                                                    <li class="add-product">
+                                                                        <a class="waves-effect waves-light btn">Add</a>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li class="search-result">
+                                                    <div class="collapsible-header">
+                                                        <div class="row search-prod-detail">
+                                                            <div class="col s3 product-image">
+                                                                <img src="images/order-product.png">
+                                                            </div>
+                                                            <div class="col s8">
+                                                                <ul class="order-product-desc">
+                                                                    <li><span class="product-name">MOFRED@ iphone7 [4.7 Inch]<br/>Tempered Glass Protector</span></li>
+                                                                    <li>By <span> MOFRED</span></li>
+                                                                    <li>In Stock <span> 2 </span></li>
+                                                                    <li>Sku <span>123654</span></li>
+                                                                    <li>Barcode <span>70965485</span></li>
+                                                                </ul>
+
+                                                            </div>
+                                                            <div class="col s1">
+                                                                <div class="product-link">
+                                                                    <a href="http://google.com"
+                                                                       title="Launch Google.com in new window"
+                                                                       target="_blank">
+                                                                        <i class="material-icons">&#xE895;</i>
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="collapsible-body">
+                                                        <div class="row">
+                                                            <div class="col s4">&nbsp;</div>
+                                                            <div class="col s8 no-padding">
+                                                                <ul class="order-product-desc">
+                                                                    <li class="product-options">
+                                                                        <div class="row">
+                                                                            <div class="col s4 no-padding">
+                                                                                <md-select ng-model="color" placeholder="Color" class="md-no-underline">
+                                                                                    <md-option value="red">Red</md-option>
+                                                                                    <md-option value="blue">Blue</md-option>
+                                                                                    <md-option value="green">Green</md-option>
+                                                                                    <md-option value="yellow">Yellow</md-option>
+                                                                                </md-select>
+                                                                            </div>    
+                                                                            <div class="col s4 no-padding">
+                                                                                <md-select ng-model="size" placeholder="Size" class="md-no-underline">
+                                                                                    <md-option value="small">Small</md-option>
+                                                                                    <md-option value="medium">Medium</md-option>
+                                                                                    <md-option value="large">Large</md-option>
+                                                                                </md-select>
+                                                                            </div>    
+                                                                            <div class="col s4 no-padding">
+                                                                                <md-select ng-model="qty" placeholder="Quantity" class="md-no-underline">
+                                                                                    <md-option value="1">1</md-option>
+                                                                                    <md-option value="2">2</md-option>
+                                                                                    <md-option value="3">3</md-option>
+                                                                                    <md-option value="4">4</md-option>
+                                                                                </md-select>
+                                                                            </div>
+                                                                        </div>
+                                                                    </li>
+                                                                    <li class="add-product">
+                                                                        <a class="waves-effect waves-light btn">Add</a>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </md-content>
+                    </div>
+                </md-sidenav>
+                <!-- end slide out card for new submit order !-->
+
+                <!-- button for slide out card for new order !-->
+                <md-button class="md-fab btn-floating btn-large ordercard-open" aria-label="Submit New Order" data-id="submit-new-order" ng-click="neworderright($event, 'open')" ng-cloak>
+                    <i class="material-icons">add</i>
+                    <md-tooltip md-visible="demo.showTooltip" md-direction="top">
+                        Submit New Order
+                    </md-tooltip>
+                </md-button>
+
+
+                <!-- model pop up !-->
+
+                <div id="custom-date" class="modal customize-date">
+                    <div class="modal-content">
+                        <div class="custom-date-picker-dialog-title">
+                            Customised time range
+                        </div>
+                        <div class="custom-date-picker-dialog-week-content ng-scope _md">                     
+                            <div class="custom-date-picker-dialog-range-from">
+                                <span>From</span>
+                                <md-datepicker ng-model="orderFilterDate" md-placeholder="Enter date"></md-datepicker>
+                            </div>
+                            <div class="custom-date-picker-dialog-range-to">
+                                <span>To</span>
+                                <md-datepicker ng-model="orderFilterDateto" md-placeholder="Enter date"></md-datepicker>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="#" class=" modal-action modal-close waves-effect waves-green btn-flat customize-date-btn">Ok</a>
+                        <a href="#" class=" modal-action modal-close waves-effect waves-green btn-flat customize-date-btn">Cancel</a>                            
+                    </div>
+                </div>
+
+            </div> <!-- Container -->
+        </div>
+        <!-- Main End -->
+
+        <!--Import jQuery before materialize js-->
+        <script type="text/javascript" src="js/materialize.min.js"></script>
+        <!-- Angular Lib js -->
+        <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0rc1/angular-route.min.js"></script>
+
+        <!-- Angular Material Library -->
+        <script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
+        <!-- Load Page App  -->
+        <script type="text/javascript">
+                                            // works in Chrome, always disabled in IE11
+                                            var disable_triple_click = true;
+                                            // set a global var to save the timestamp of the last mousedown
+                                            var down = new Date().getTime();
+                                            var old_down = down;
+                                            (function () {
+                                            'use strict';
+                                               var app = angular
+                                                    .module('orders', ['ngMaterial', 'ngMessages', 'ngRoute'])
+                                                    // Theme Config
+                                                    .config(function($mdThemingProvider) {
+                                                    $mdThemingProvider.theme('default')
+                                                            .primaryPalette('blue', {
+                                                            'default': 'A700'
+                                                            })
+                                                            .accentPalette('blue', {
+                                                            'default': 'A700'
+                                                            });
+                                                    })
+
+
+                                                    .controller('StatusController', function($scope, $window) {
+                                                    $scope.items = ['All', 'Active', 'Inactive'];
+                                                            $scope.selectedItem;
+                                                            $scope.getSelectedText = function() {
+
+                                                            if ($scope.selectedItem !== undefined){
+
+                                                            return  $scope.selectedItem;
+                                                            } else{
+                                                            return  $scope.selectedItem = 'All';
+                                                            }
+                                                            }
+                                                    })
+
+                                                    .controller('dateFilterCntrl', function($scope) {
+                                                    /* $scope.items = ['All', 'Active', 'Inactive'];
+                                                     $scope.selectedItem;*/
+                                                    $scope.getSelectedText = function(dateFilter) {
+
+                                                    if ($scope.dateFilter == 'custom') {
+                                                    //window.alert($scope.dateFilter)
+                                                    $('#custom-date').modal('open');
+                                                    }
+                                                    }
+                                                    //$scope.datefilter.splice(0,0,{ key: 'test', value:'test'});
+                                                    })
+
+                                                    // For Date - with Min~Max Limit
+                                                    .controller('orderFilterCntrlfrom', function($scope) {
+                                                    $scope.orderFilterDate = new Date();
+                                                            $scope.minDate = new Date(
+                                                                    $scope.orderFilterDate.getFullYear(),
+                                                                    $scope.orderFilterDate.getMonth() - 2,
+                                                                    $scope.orderFilterDate.getDate());
+                                                            $scope.maxDate = new Date(
+                                                                    $scope.orderFilterDate.getFullYear(),
+                                                                    $scope.orderFilterDate.getMonth() + 2,
+                                                                    $scope.orderFilterDate.getDate());
+                                                            $scope.onlyWeekendsPredicate = function(date) {
+                                                            var day = date.getDay();
+                                                                    return day === 0 || day === 6;
+                                                            };
+                                                    })
+                                                    .controller('orderFilterCntrlto', function($scope) {
+                                                    $scope.orderFilterDateto = new Date();
+                                                            $scope.minDate = new Date(
+                                                                    $scope.orderFilterDateto.getFullYear(),
+                                                                    $scope.orderFilterDateto.getMonth() - 2,
+                                                                    $scope.orderFilterDateto.getDate());
+                                                            $scope.maxDate = new Date(
+                                                                    $scope.orderFilterDateto.getFullYear(),
+                                                                    $scope.orderFilterDateto.getMonth() + 2,
+                                                                    $scope.orderFilterDateto.getDate());
+                                                            $scope.onlyWeekendsPredicate = function(date) {
+                                                            var day = date.getDay();
+                                                                    return day === 0 || day === 6;
+                                                            };
+                                                    })
+
+
+                                                    .controller('orderFilterController', function($scope, $element) {
+                                                    $scope.channels = ['Amazon', 'Shopify', 'Flipkart', 'WooCommerce' ];
+                                                            $scope.searchTerm;
+                                                            $scope.clearSearchTerm = function() {
+                                                            $scope.searchTerm = '';
+                                                            };
+                                                            // The md-select directive eats keydown events for some quick select
+                                                            // logic. Since we have a search input here, we don't need that logic.
+                                                            $element.find('input').on('keydown', function(ev) {
+                                                    ev.stopPropagation();
+                                                    });
+                                                    })
+
+                                                    /* submit new order card drop down*/
+                                                    .controller('orderchannelFilterController', function($scope, $element) {
+                                                    $scope.channels = ['All', 'Amazon', 'Shopify', 'Flipkart', 'WooCommerce' ];
+                                                            $scope.searchTerm;
+                                                            $scope.clearSearchTerm = function() {
+                                                            $scope.searchTerm = '';
+                                                            };
+                                                            // The md-select directive eats keydown events for some quick select
+                                                            // logic. Since we have a search input here, we don't need that logic.
+                                                            $element.find('input').on('keydown', function(ev) {
+                                                    ev.stopPropagation();
+                                                    });
+                                                    })
+
+                                                    /*search category filter for submit new order card*/
+                                                    .controller('searchcatfilter', function($scope, $element) {
+                                                    $scope.categories = ['category', 'Amazon', 'Shopify', 'Flipkart', 'WooCommerce' ];
+                                                            $scope.searchTerm;
+                                                            $scope.clearSearchTerm = function() {
+                                                            $scope.searchTerm = '';
+                                                            };
+                                                            // The md-select directive eats keydown events for some quick select
+                                                            // logic. Since we have a search input here, we don't need that logic.
+                                                            $element.find('input').on('keydown', function(ev) {
+                                                    ev.stopPropagation();
+                                                    });
+                                                    })
+
+                                                    /*search customer filter for submit new order card*/
+                                                    .controller('searchcustomerfilter', function($scope, $element) {
+                                                    $scope.customers = ['customer', 'Amazon', 'Shopify', 'Flipkart', 'WooCommerce' ];
+                                                            $scope.searchTerm;
+                                                            $scope.clearSearchTerm = function() {
+                                                            $scope.searchTerm = '';
+                                                            };
+                                                            // The md-select directive eats keydown events for some quick select
+                                                            // logic. Since we have a search input here, we don't need that logic.
+                                                            $element.find('input').on('keydown', function(ev) {
+                                                    ev.stopPropagation();
+                                                    });
+                                                    })
+
+                                                    /*order sidenav*/
+
+                                                    .controller('AppCtrl', function ($scope, $timeout, $mdSidenav, $mdToast, $document, $compile) {
+
+                                                    $scope.neworderright = function(e, orderparam) {
+                                                    var componentid = e.currentTarget.getAttribute("data-id");
+                                                            // remove all active class
+                                                            angular.element(document.querySelector('.active')).removeClass('active');
+                                                            // add active class to current card
+                                                            angular.element(e.currentTarget).addClass('active');
+                                                            var sidenavhtml = '#' + componentid;
+                                                            buildToggler('csidenav', orderparam, sidenavhtml);
+                                                    }
+
+                                                    /* $scope.productClass = "";
+                                                     $scope.changeProductClass = function(e){
+                                                     var classElement = angular.element(e.currentTarget);
+                                                     $('.search-prod-detail').removeClass('active');
+                                                     classElement.addClass('active');
+                                                     };*/
+                                                    function buildToggler(componentId, orderparam, dataId) {
+
+                                                    if (orderparam == 'open') {
+                                                    //get data of selected card
+                                                    var sidenav_data = angular.element(document.querySelector(dataId));
+                                                            var ordercardhtml = sidenav_data.html();
+                                                            var dataorder = $compile(ordercardhtml)($scope);
+                                                            // replace content in the sideNav                        
+                                                            angular.element(document.querySelector('#sidenav')).html(dataorder).html();
+                                                            setCardHeight();
+                                                            $('.all-product').collapsible();
+                                                            /*New Order Card shadow for scroll Content*/
+                                                            document.querySelector('.new-order-content').onscroll = function() {
+                                                    if ($(this).scrollTop() > 20)  {
+                                                    $('#new-order').addClass('scroll-shadow');
+                                                    } else {
+                                                    $('#new-order').removeClass('scroll-shadow');
+                                                    }
+                                                    if (this.scrollHeight - this.clientHeight - $(this).scrollTop() < 20){
+                                                    $('.order-total-detail').addClass('remove-scroll-shadow');
+                                                    }
+                                                    else {
+                                                    $('.order-total-detail').removeClass('remove-scroll-shadow');
+                                                    }
+                                                    }
+                                                    /*packaging Order Card shadow for scroll Content*/
+                                                    document.querySelector('.packaging-order-content').onscroll = function() {
+                                                    if ($(this).scrollTop() > 20)  {
+                                                    $('#package-order').addClass('scroll-shadow');
+                                                    } else {
+                                                    $('#package-order').removeClass('scroll-shadow');
+                                                    }
+                                                    if (this.scrollHeight - this.clientHeight - $(this).scrollTop() < 20){
+                                                    $('.order-total-detail').addClass('remove-scroll-shadow');
+                                                    }
+                                                    else {
+                                                    $('.order-total-detail').removeClass('remove-scroll-shadow');
+                                                    }
+                                                    }
+                                                    /*Dispatch Order Card shadow for scroll Content*/
+                                                    document.querySelector('.dispatch-order-content').onscroll = function() {
+                                                    if ($(this).scrollTop() > 20)  {
+                                                    $('#dispatch-order').addClass('scroll-shadow');
+                                                    } else {
+                                                    $('#dispatch-order').removeClass('scroll-shadow');
+                                                    }
+                                                    if (this.scrollHeight - this.clientHeight - $(this).scrollTop() < 20){
+                                                    $('.order-total-detail').addClass('remove-scroll-shadow');
+                                                    }
+                                                    else {
+                                                    $('.order-total-detail').removeClass('remove-scroll-shadow');
+                                                    }
+                                                    }
+                                                    document.querySelector('.outofstock-order-content').onscroll = function() {
+                                                    if ($(this).scrollTop() > 20)  {
+                                                    $('#outofstock-order').addClass('scroll-shadow');
+                                                    } else {
+                                                    $('#outofstock-order').removeClass('scroll-shadow');
+                                                    }
+                                                    if (this.scrollHeight - this.clientHeight - $(this).scrollTop() < 20){
+                                                    $('.order-total-detail').addClass('remove-scroll-shadow');
+                                                    }
+                                                    else {
+                                                    $('.order-total-detail').removeClass('remove-scroll-shadow');
+                                                    }
+                                                    }
+                                                    /*box shadow scroll for submit order*/
+                                                    document.querySelector('.submit-order-detail').onscroll = function() {
+                                                    if ($(this).scrollTop() > 20)  {
+                                                    $('#order-card').addClass('scroll-shadow');
+                                                    } else {
+                                                    $('#order-card').removeClass('scroll-shadow');
+                                                    }
+                                                    if (this.scrollHeight - this.clientHeight - $(this).scrollTop() < 20){
+                                                    $('.order-total-detail').addClass('remove-scroll-shadow');
+                                                    }
+                                                    else {
+                                                    $('.order-total-detail').removeClass('remove-scroll-shadow');
+                                                    }
+                                                    }
+                                                    document.querySelector('.all-product').onscroll = function() {
+                                                    if ($(this).scrollTop() > 20)  {
+                                                    $('.search-filter').addClass('scroll-shadow');
+                                                    } else {
+                                                    $('.search-filter').removeClass('scroll-shadow');
+                                                    }
+                                                    if (this.scrollHeight - this.clientHeight - $(this).scrollTop() < 20){
+                                                    $('.order-total-detail').addClass('remove-scroll-shadow');
+                                                    }
+                                                    else {
+                                                    $('.order-total-detail').removeClass('remove-scroll-shadow');
+                                                    }
+                                                    }
+                                                    if ($mdSidenav(componentId).isOpen() == false){
+                                                    var sidenav_width = $('.common-sidenav').width();
+                                                            $('.ordercard-open').css('right', sidenav_width + 30 + 'px');
+                                                            $mdSidenav(componentId).open();
+                                                    }
+                                                    }
+                                                    if (orderparam == 'close'){
+                                                    $mdSidenav(componentId).close();
+                                                            $('.ordercard-open').css('right', '30px');
+                                                    }
+                                                    }
+
+                                                    /*submit order toast*/
+                                                    $scope.showActionToast = function() {
+                                                    var toast = $mdToast.simple()
+                                                            .textContent('Submit Order Successfully')
+                                                            .action('UNDO')
+                                                            .hideDelay(10000)
+                                                            .highlightAction(true)
+                                                            .highlightClass('md-accent')// Accent is used by default, this just demonstrates the usage.
+                                                            .position('bottom center');
+                                                            $mdToast.show(toast).then(function(response) {
+                                                    if (response == 'ok') {
+                                                    //alert('You clicked the \'UNDO\' action.');
+                                                    }
+                                                    });
+                                                    };
+                                                            /*new order toast*/
+                                                            $scope.showpackagingToast = function() {
+                                                            var toast = $mdToast.simple()
+                                                                    .textContent('Packaging Order Successfully')
+                                                                    .action('UNDO')
+                                                                    .hideDelay(10000)
+                                                                    .highlightAction(true)
+                                                                    .highlightClass('md-accent')// Accent is used by default, this just demonstrates the usage.
+                                                                    .position('bottom left');
+                                                                    $mdToast.show(toast).then(function(response) {
+                                                            if (response == 'ok') {
+                                                            //alert('You clicked the \'UNDO\' action.');
+                                                            }
+                                                            });
+                                                            };
+                                                            /*packaging order toast*/
+                                                            $scope.showpackageorderToast = function() {
+                                                            var toast = $mdToast.simple()
+                                                                    .textContent('Packaging Order Successfully')
+                                                                    .action('UNDO')
+                                                                    .hideDelay(10000)
+                                                                    .highlightAction(true)
+                                                                    .highlightClass('md-accent')// Accent is used by default, this just demonstrates the usage.
+                                                                    .position('bottom left');
+                                                                    $mdToast.show(toast).then(function(response) {
+                                                            if (response == 'ok') {
+                                                            //alert('You clicked the \'UNDO\' action.');
+                                                            }
+                                                            });
+                                                            };
+                                                            /*Dispatch order toast*/
+                                                            $scope.showtrackToast = function() {
+                                                            var toast = $mdToast.simple()
+                                                                    .textContent('Track Order Successfully')
+                                                                    .action('UNDO')
+                                                                    .hideDelay(10000)
+                                                                    .highlightAction(true)
+                                                                    .highlightClass('md-accent')// Accent is used by default, this just demonstrates the usage.
+                                                                    .position('bottom center');
+                                                                    $mdToast.show(toast).then(function(response) {
+                                                            if (response == 'ok') {
+                                                            //alert('You clicked the \'UNDO\' action.');
+                                                            }
+                                                            });
+                                                            };
+                                                            /*Out of stock order Toast*/
+                                                            $scope.showoutofstockToast = function() {
+                                                            var toast = $mdToast.simple()
+                                                                    .textContent('Out Of stock Order Update Successfully')
+                                                                    .action('UNDO')
+                                                                    .hideDelay(10000)
+                                                                    .highlightAction(true)
+                                                                    .highlightClass('md-accent')// Accent is used by default, this just demonstrates the usage.
+                                                                    .position('bottom center');
+                                                                    $mdToast.show(toast).then(function(response) {
+                                                            if (response == 'ok') {
+                                                            //alert('You clicked the \'UNDO\' action.');
+                                                            }
+                                                            });
+                                                            };
+                                                    })
+
+                                                    .controller('ToastCtrl', function($scope, $mdToast) {
+                                                    $scope.closeToast = function() {
+                                                    $mdToast.hide();
+                                                    };
+                                                    })
+
+                                                    /*search filter for submit order card*/
+                                                    .controller('instantSearchCtrl', function($scope, $http){
+                                                    $http.get('data.json').success(function(data, status, headers, config) {
+                                                    $scope.items = data.data;
+                                                    }).error(function(data, status, headers, config) {
+                                                    console.log("No data found..");
+                                                    });
+                                                            $scope.ShowHide = function(){
+                                                            var myEl = angular.element(document.querySelector('.submitorder-detail'));
+                                                                    myEl.css('display', 'none');
+                                                                    var test12 = angular.element(document.querySelector('.search-product'));
+                                                                    test12.css('display', 'block');
+                                                            };
+                                                    })
+
+                                                    .controller('orderSearch', orderSearch);
+                                                    function orderSearch ($timeout, $q, $log) {
+                                                    var self = this;
+                                                            self.simulateQuery = false;
+                                                            self.isDisabled = false;
+                                                            // list of `state` value/display objects
+                                                            self.states = loadAll();
+                                                            self.querySearch = querySearch;
+                                                            self.selectedItemChange = selectedItemChange;
+                                                            self.searchTextChange = searchTextChange;
+                                                            self.newState = newState;
+                                                            function newState(state) {
+                                                            alert("Sorry! You'll need to create a Constitution for " + state + " first!");
+                                                            }
+
+                                                    // ******************************
+                                                    // Internal methods
+                                                    // ******************************
+
+                                                    /**
+                                                     * Search for states... use $timeout to simulate
+                                                     * remote dataservice call.
+                                                     */
+                                                    function querySearch (query) {
+                                                    var results = query ? self.states.filter(createFilterFor(query)) : self.states,
+                                                            deferred;
+                                                            if (self.simulateQuery) {
+                                                    deferred = $q.defer();
+                                                            $timeout(function () { deferred.resolve(results); }, Math.random() * 1000, false);
+                                                            return deferred.promise;
+                                                    } else {
+                                                    return results;
+                                                    }
+                                                    }
+
+                                                    function searchTextChange(text) {
+                                                    $log.info('Text changed to ' + text);
+                                                    }
+
+                                                    function selectedItemChange(item) {
+                                                    $log.info('Item changed to ' + JSON.stringify(item));
+                                                    }
+
+                                                    /**
+                                                     * Build `states` list of key/value pairs
+                                                     */
+                                                    function loadAll() {
+                                                    var allStates = 'Ritesh, Ritz, Shneor, Ofer, James, Jonathan, Elize, Alize';
+                                                            return allStates.split(/, +/g).map(function (state) {
+                                                    return {
+                                                    value: state.toLowerCase(),
+                                                            display: state
+                                                    };
+                                                    });
+                                                    }
+
+                                                    /**
+                                                     * Create filter function for a query string
+                                                     */
+                                                    function createFilterFor(query) {
+                                                    var lowercaseQuery = angular.lowercase(query);
+                                                            return function filterFn(state) {
+                                                            return (state.value.indexOf(lowercaseQuery) === 0);
+                                                            };
+                                                    }
+                                                    }
+                                                        // Channel Filter
+                                                        app.directive("newOrderChannelFilter", function() {
+                                                        return {
+                                                          restrict: "E",
+                                                          templateUrl: "orders/newOrderChannelFilter.html",
+
+                                                          controller: function($scope, $element) {
+                                                            $scope.channels = ['All', 'Amazon', 'Shopify', 'Flipkart', 'WooCommerce' ];
+                                                            $scope.searchTerm;
+                                                            $scope.clearSearchTerm = function() {
+                                                            $scope.searchTerm = '';
+                                                            };
+                                                            // The md-select directive eats keydown events for some quick select
+                                                            // logic. Since we have a search input here, we don't need that logic.
+                                                            $element.find('input').on('keydown', function(ev) {
+                                                            ev.stopPropagation();
+
+                                                            })
+                                                          }
+                                                        }});
+                                                        // Category Filter
+                                                         app.directive("newOrderCategoryFilter", function() {
+                                                        return {
+                                                          restrict: "E",
+                                                          templateUrl: "orders/newOrderCategoryFilter.html",
+
+                                                          controller: function($scope, $element) {
+                                                            $scope.categories = ['category', 'Amazon' ,'Shopify' ,'Flipkart', 'WooCommerce' ];
+                                                            $scope.searchTerm;
+                                                            $scope.clearSearchTerm = function() {
+                                                                $scope.searchTerm = '';
+                                                            };
+                                                            // The md-select directive eats keydown events for some quick select
+                                                            // logic. Since we have a search input here, we don't need that logic.
+                                                            $element.find('input').on('keydown', function(ev) {
+                                                                ev.stopPropagation();
+                                                            })
+                                                          }
+                                                        }});
+                                                    //Customer Filter
+                                                     app.directive("newOrderCustomerFilter", function() {
+                                                        return {
+                                                          restrict: "E",
+                                                          templateUrl: "orders/newOrderCustomerFilter.html",
+
+                                                          controller: function($scope, $element) {
+                                                            $scope.customers = ['customer', 'Amazon' ,'Shopify' ,'Flipkart', 'WooCommerce' ];
+                                                            $scope.searchTerm;
+                                                            $scope.clearSearchTerm = function() {
+                                                                $scope.searchTerm = '';
+                                                            };
+                                                            // The md-select directive eats keydown events for some quick select
+                                                            // logic. Since we have a search input here, we don't need that logic.
+                                                            $element.find('input').on('keydown', function(ev) {
+                                                                ev.stopPropagation();
+                                                            })
+                                                          }
+                                                        }});
+                                                      
+                                                      
+
+
+                                            // open dialog when select dropdown
+                                            $(document).ready(function(){
+
+                                            // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
+                                            $('.modal').modal();
+                                                    /*Collapsible popout in search product in submit order card*/
+                                                    $('.all-product').collapsible();
+                                                    /*get html content*/
+                                                    $('.packaging-orderbtn').on('click', function(){
+                                            var new_card = $("#new-order-data")[0].outerHTML;
+                                                    new_card = new_card.replace('<a href="#" data-activates="new-order-card" class="new-order-sec ordercard-open" id="new-order-data">', '<a href="#" data-activates="packaging-order-card" class="packaging-order-sec ordercard-open">');
+                                                    $(new_card).prependTo('.all-packaing-order').show("slide", { direction: "right" }, 1200);
+                                                    $(".packaging-order-sec").sideNav({
+                                            edge: 'right',
+                                                    closeOnClick: true, // Closes side-nav on <a> clicks, useful for Angular/Meteor
+                                                    draggable: true, // Choose whether you can drag to open on touch screens
+
+                                            })
+                                                    $('#new-order-data').remove();
+                                            })
+
+                                                    /*dynamic width order section*/
+                                                    var padright = parseInt($("div.orders-all-detail").css("padding-left"));
+                                                    var padleft = parseInt($("div.orders-all-detail").css("padding-right"));
+                                                    var allwidth = $('.order-cards')[0].getBoundingClientRect().width * 5;
+                                                    var marginright = parseInt($("div.order-cards").css("margin-right")) * 4;
+                                                    var totatwidth = padright + padleft + allwidth + marginright;
+                                                    $('.orders-all-detail').css('width', totatwidth);
+                                            });
+                                                    /* card height dynamic*/
+                                                            function setCardHeight() {
+
+                                                            var winheight = $(window).height();
+                                                                    var headerheight = $('.header').height();
+                                                                    var toolbar = $('#new-order').height();
+                                                                    var sidefooter = $('.order-total-detail').height();
+                                                                    var contentheight = winheight - headerheight - headerheight - 175;
+                                                                    var newcontentheight = winheight - headerheight - headerheight - 117;
+                                                                    var searchardheight = winheight - headerheight - headerheight - 80 - 55;
+                                                                    $('.new-order-content').css('height', newcontentheight);
+                                                                    $('.submit-order-detail').css('height', newcontentheight);
+                                                                    $('.dispatch-order-content').css('height', contentheight);
+                                                                    $('.outofstock-order-content').css('height', contentheight);
+                                                                    $('.packaging-order-content').css('height', contentheight);
+                                                                    $('.all-product').css('height', searchardheight);
+                                                            }
+                                                    /* Resize sidenav card when window resize*/
+                                                    $(window).resize(function () {
+                                                    setCardHeight();
+                                                    });
+                                                            /*box shadow end*/
+
+                                                            /*mouseover change depth*/
+                                                            $("div.bx-shadow").mouseover(function(){
+                                                    $(this).addClass('bx-shadow-depth2');
+                                                            $(this).removeClass('bx-shadow');
+                                                    }).mouseout(function() {
+                                                    $(this).addClass('bx-shadow');
+                                                            $(this).removeClass('bx-shadow-depth2');
+                                                    });
+                                                            // PAGE IS FULLY LOADED  
+                                                            $(window).load(function(){
+                                                    $('#progress-overlay').fadeOut();
+                                                    });
+                                                            // Disable selection on double click
+                                                            $('body').on('mousedown', function(e)
+                                                    {
+                                                    var time = new Date().getTime();
+                                                            if ((time - down) < 500 &&
+                                                                    (disable_triple_click || (down - old_down) > 500))
+                                                    {
+                                                    old_down = down;
+                                                            down = time;
+                                                            e.preventDefault(); // just in case
+                                                            return false; // mandatory
+                                                    }
+                                                    old_down = down;
+                                                            down = time;
+                                                    });
+                                                    })();
+        </script>
+    </body>
+</html>

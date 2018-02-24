@@ -1,0 +1,1506 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta charset="utf-8">
+      <title>Inventory - RIYO OFM</title>
+      <!-- Metas -->
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <meta name="description" content="">
+      <meta name="keywords" content="">
+      <!-- View Port for responsive -->
+      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+      <!-- Import Google Icon Font -->
+      <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+      <!-- Import Angular Material -->
+      <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css">
+      <!-- Import Materialize CSS -->
+      <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+      <!-- Import custom CSS -->
+      <link type="text/css" rel="stylesheet" href="css/custom.css"/>
+      <!-- Import jQuery Lib -->
+      <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+   </head>
+   <body class="inventory-page" ng-app="inventory">
+   <div id="progress-overlay">
+            <div layout="row" layout-sm="column" layout-align="space-around">
+                <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+            </div>
+   </div>    
+       
+      <div class="devsite-wrapper">
+         <header>
+            <!-- Header Start -->
+            <div class="header">
+               <div class="app-logo">
+                  <a href="index.html" class="logo">RIYO OFM</a>
+               </div>
+               <div class="container">
+                  <nav class="nav-extended">
+                     <div class="nav-wrapper">
+                        <ul class="left hide-on-med-and-down custom-nav">
+                           <li><a href="index.html" class="waves-effect waves-light">Dashboard</a></li>
+                           <li class="active"><a href="inventory.html" class="waves-effect waves-light">Inventory</a></li>
+                           <li><a href="orders.html" class="waves-effect waves-light">Orders</a></li>
+                           <li><a href="integrations.html" class="waves-effect waves-light">Integrations</a></li>
+                           <li><a href="customers.html" class="waves-effect waves-light">Customers</a></li>
+                        </ul>
+                     </div>
+               </div>
+               </nav>
+               <div class="usermenu">
+                  <a class="dropdown-button" href="#!" data-activates="umenu">YOAV<i class="material-icons right">arrow_drop_down</i></a>
+                  <ul id="umenu" class="dropdown-content">
+                     <li><a href="#!">My Profile</a></li>
+                     <li class="divider"></li>
+                     <li><a href="#!">Account Settings</a></li>
+                     <li class="divider"></li>
+                     <li><a href="#!">Logout</a></li>
+                  </ul>
+               </div>
+            </div>
+            <!-- Header End -->
+            <!-- Sub Header Start -->
+            <div class="sub-header">
+               <div class="container">
+                  <ul class="no-btm-margin inventory-filter">
+                     <li ng-controller="StatusController" class="ng-cloak column-two">
+                        <md-input-container>
+                           <label>Status</label>
+                           <md-select name="status" ng-model="status">
+                              <md-option value="all" ng-selected="true">All</md-option>
+                              <md-option value="active">Active</md-option>
+                              <md-option value="inactive">Inactive</md-option>
+                           </md-select>
+                        </md-input-container>
+                     </li>
+                     <li ng-controller="catFilterController" class="ng-cloak column-two">
+                        <md-input-container>
+                           <label>Category</label>
+                           <md-select ng-model="selectedCats"
+                              md-on-close="clearSearchTerm()"
+                              data-md-container-class="intSelectHeader"
+                              multiple>
+                              <md-select-header class="search-select-header">
+                                 <input ng-model="searchTerm"
+                                    type="search"
+                                    placeholder="Search for a Category.."
+                                    class="demo-header-searchbox md-text">
+                              </md-select-header>
+                              <md-optgroup label="cats">
+                                 <md-option ng-selected="{{cat == 'All'}}" ng-value="cat" ng-repeat="cat in cats |
+                                    filter:searchTerm">{{cat}}</md-option>
+                              </md-optgroup>
+                           </md-select>
+                        </md-input-container>
+                     </li>
+                     <li ng-controller="channelFilterController" class="ng-cloak column-two">
+                        <md-input-container>
+                           <label>Channel</label>
+                           <md-select ng-model="selectedChannels"
+                              md-on-close="clearSearchTerm()"
+                              data-md-container-class="intSelectHeader"
+                              multiple>
+                              <md-select-header class="search-select-header">
+                                 <input ng-model="searchTerm"
+                                    type="search"
+                                    placeholder="Search for a Channel.."
+                                    class="demo-header-searchbox md-text">
+                              </md-select-header>
+                              <md-optgroup label="channels">
+                                 <md-option ng-selected="{{channel == 'All'}}" ng-value="channel" ng-repeat="channel in channels |
+                                    filter:searchTerm">{{channel}}</md-option>
+                              </md-optgroup>
+                           </md-select>
+                        </md-input-container>
+                     </li>
+                     <li ng-controller="custFilterController" class="ng-cloak column-two">
+                        <md-input-container>
+                           <label>Customer</label>
+                           <md-select ng-model="selectedCustomers"
+                              md-on-close="clearSearchTerm()"
+                              data-md-container-class="intSelectHeader"
+                              multiple>
+                              <md-select-header class="search-select-header">
+                                 <input ng-model="searchTerm"
+                                    type="search"
+                                    placeholder="Search for a Customer.."
+                                    class="demo-header-searchbox md-text">
+                              </md-select-header>
+                              <md-optgroup label="customers">
+                                 <md-option ng-selected="{{customer == 'All'}}" ng-value="customer" ng-repeat="customer in customers |
+                                    filter:searchTerm">{{customer}}</md-option>
+                              </md-optgroup>
+                           </md-select>
+                        </md-input-container>
+                     </li>
+                     <li class="autosearch-wrapper ng-cloak column-four" ng-controller="invtSearch as ctrl" layout="column">
+                        <label for="search"><i class="material-icons autosearch">search</i></label>
+                        <form ng-submit="$event.preventDefault()">
+                           <md-autocomplete
+                              ng-disabled="ctrl.isDisabled"
+                              md-no-cache="ctrl.noCache"
+                              md-selected-item="ctrl.selectedItem"
+                              md-search-text-change="ctrl.searchTextChange(ctrl.searchText)"
+                              md-search-text="ctrl.searchText"
+                              md-selected-item-change="ctrl.selectedItemChange(item)"
+                              md-items="item in ctrl.querySearch(ctrl.searchText)"
+                              md-item-text="item.display"
+                              md-min-length="0"
+                              placeholder="Search Inventory..">
+                              <md-item-template>
+                                 <span md-highlight-text="ctrl.searchText" md-highlight-flags="^i">{{item.display}}</span>
+                              </md-item-template>
+                              <md-not-found>
+                                 No Apps matching "{{ctrl.searchText}}" were found.
+                              </md-not-found>
+                           </md-autocomplete>
+                        </form>
+                     </li>
+                  </ul>
+               </div>
+            </div>
+            <!-- Sub Header End -->
+         </header>
+      </div>
+      <!-- Main Start -->
+      <div class="inventory-main main-container">
+         <div class="container">
+            <div class="row">
+               <div class="col s12">
+                  <!-- Out of Stock Products -->
+                  <div class="stock-list-heading">
+                     <h3 class="sub-title">Out of Stock <sub>(5)</sub></h3>
+                  </div>
+                  <div class="row">
+                     <div class="col s12">
+                        <div class="card horizontal inventaro-head Large inventory-card bx-shadow">
+                           <div class="invt-details col s1 card-content">
+                              <div class="section center stock-head">
+                              </div>
+                           </div>
+                           <div class="invt-details col s3 card-content">
+                              <div class="section stock-head">
+                                 <h6>Name</h6>
+                              </div>
+                           </div>
+                           <div class="invt-details col s3 card-content">
+                              <div class="section stock-head">
+                                 <h6>Sku</h6>
+                              </div>
+                           </div>
+                           <div class="invt-details col s1 card-content">
+                              <div class="section stock-head">
+                                 <h6>On Orders</h6>
+                              </div>
+                           </div>
+                           <div class="invt-details col s1 card-content">
+                              <div class="section stock-head">
+                                 <h6>Min Stock</h6>
+                              </div>
+                           </div>
+                           <div class="invt-details col s1 card-content">
+                              <div class="section stock-head">
+                                 <h6>In Stock</h6>
+                              </div>
+                           </div>
+                           <div class="invt-details col s2 card-content">
+                              <div class="section stock-head">
+                                 <h6>Status</h6>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="stock-collection">
+                     <ul class="collapsible popout" data-collapsible="accordion" ng-controller="showProductCard">
+                        
+                        <li>
+                           <div class="collapsible-header">
+                              <div class="row">
+                                 <div class="invt-details product-list col s1 card-content">
+                                    <div class="section product-img">
+                                       <img class="responsive-img" src="images/order-product.jpg" alt="" />
+                                    </div>
+                                 </div>
+                                 <div class="invt-details product-list col s3 card-content">
+                                    <div class="section">
+                                       <h2>Product Full Name</h2>
+                                    </div>
+                                 </div>
+                                 <div class="invt-details product-list col s3 card-content">
+                                    <div class="section">
+                                       <h2>Sp 5214963 MLK</h2>
+                                    </div>
+                                 </div>
+                                 <div class="invt-details product-list col s1 card-content">
+                                    <div class="section">
+                                       <h2>13</h2>
+                                    </div>
+                                 </div>
+                                 <div class="invt-details product-list col s1 card-content">
+                                    <div class="section">
+                                       <h2>4</h2>
+                                    </div>
+                                 </div>
+                                 <div class="invt-details product-list col s1 card-content">
+                                    <div class="section">
+                                       <h2>0</h2>
+                                    </div>
+                                 </div>
+                                 <div class="invt-details product-list col s2 card-content">
+                                    <div class="section">
+                                       <h2>Active</h2>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+                           <div class="collapsible-body">test</div>
+                        </li>
+                        <li ng-click="showHideCard">
+                           <div class="collapsible-header">
+                              <div class="row">
+                                 <div class="invt-details product-list col s1 card-content">
+                                    <div class="section product-img">
+                                       <img class="responsive-img" src="images/order-product.jpg" alt="" />
+                                    </div>
+                                 </div>
+                                 <div class="invt-details product-list col s3 card-content">
+                                    <div class="section">
+                                       <h2>Product Full Name</h2>
+                                    </div>
+                                 </div>
+                                 <div class="invt-details product-list col s3 card-content">
+                                    <div class="section">
+                                       <h2>Sp 5214963 MLK</h2>
+                                    </div>
+                                 </div>
+                                 <div class="invt-details product-list col s1 card-content">
+                                    <div class="section">
+                                       <h2>13</h2>
+                                    </div>
+                                 </div>
+                                 <div class="invt-details product-list col s1 card-content">
+                                    <div class="section">
+                                       <h2>4</h2>
+                                    </div>
+                                 </div>
+                                 <div class="invt-details product-list col s1 card-content">
+                                    <div class="section">
+                                       <h2>0</h2>
+                                    </div>
+                                 </div>
+                                 <div class="invt-details product-list col s2 card-content">
+                                    <div class="section">
+                                       <h2>Active</h2>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+                           <div class="collapsible-body">
+                              <div class="card int-product-view" ng-hide="viewProduct">
+                                 <md-toolbar class="product-card">
+                                    <div class="md-toolbar-tools">
+                                       <h2>
+                                          <span>iPhone Screen Protector</span>
+                                       </h2>
+                                       <span flex></span>
+                                       <md-button class="md-icon-button" aria-label="edit" ng-click="showEditCard()">
+                                          <i class="material-icons">mode_edit</i>
+                                       </md-button>
+                                       <md-button class="md-icon-button" aria-label="menu">
+                                          <i class="material-icons">more_vert</i>
+                                       </md-button>
+                                    </div>
+                                 </md-toolbar>
+                                 <div class="card-content">
+                                    <div class="row">
+                                       <div class="col s3 no-padding">
+                                          <div class="product-img">
+                                             <img class="responsive-img" src="images/t-shirt.jpg" alt="" />
+                                          </div>
+                                          <div class="image-thumbnails">
+                                             <ul>
+                                                <li><img class="responsive-img" src="images/placeholder-thumb.jpg" alt="" /></li>
+                                                <li><img class="responsive-img" src="images/placeholder-thumb.jpg" alt="" /></li>
+                                                <li><img class="responsive-img" src="images/placeholder-thumb.jpg" alt="" /></li>
+                                             </ul>
+                                          </div>
+                                       </div>
+                                       <div class="col s9 no-padding">
+                                          <div class="row product-details-wrapper">
+                                             <div class="col s6 no-padding">
+                                                <div class="product-details">
+                                                   <h3 class="no-top-margin">Product Details</h3>
+                                                   <ul>
+                                                      <li><span>Product name:</span> iPhone screen Protector</li>
+                                                      <li><span>Manufacturer:</span> Apple</li>
+                                                      <li><span>Category:</span> Electronics</li>
+                                                      <li><span>Color:</span> Color</li>
+                                                   </ul>
+                                                </div>
+                                                <div class="product-details product-dimension">
+                                                   <h3>Dimensions</h3>
+                                                   <ul>
+                                                      <li><span>Width:</span> 30cm</li>
+                                                      <li><span>Depth:</span> 50cm</li>
+                                                      <li><span>Height:</span> 25cm</li>
+                                                      <li><span>Weight:</span> 2.5cm</li>
+                                                      <li><span>Volume:</span> 30ltr</li>
+                                                   </ul>
+                                                </div>
+                                             </div>
+                                             <div class="col s6 no-padding">
+                                                <div class="product-details">
+                                                   <h3 class="no-top-margin">Stock</h3>
+                                                   <ul>
+                                                      <li><span>on Orders:</span> 2</li>
+                                                      <li><span>Min Stock:</span> 4</li>
+                                                      <li><span>In Stock:</span> 0</li>
+                                                      <li><span>Status:</span> Out Of Stock</li>
+                                                   </ul>
+                                                </div>
+                                                <div class="product-details product-logistics">
+                                                   <h3>RIYO Logistics Warehouse</h3>
+                                                   <ul>
+                                                      <li><span>Warehouse location:</span> D 15 A</li>
+                                                      <li><span>Sku:</span> SP 5214963 MLK</li>
+                                                      <li><span>Barcode:</span> 327469851</li>
+                                                      <li><span>Seller:</span> Online trade ltd</li>
+                                                      <li><span>Seller ID:</span> avi00125369</li>
+                                                   </ul>
+                                                </div>
+                                             </div>
+                                          </div>
+                                       </div>
+                                    </div>
+                                 </div>
+                              </div>
+                              <div class="card int-product-edit" ng-show="editProduct">
+                                 <md-toolbar class="product-card">
+                                    <div class="md-toolbar-tools">
+                                       <h2>
+                                          <span>iPhone Screen Protector</span>
+                                       </h2>
+                                       <span flex></span>
+                                      
+                                       <md-button class="md-icon-button" aria-label="done" ng-click="showViewCard()">
+                                          <i class="material-icons">done</i>
+                                       </md-button>
+                                       <md-menu-bar class="edit-prod-menu">
+                                            <md-menu md-position-mode="target-right target">
+                                               <button class="md-icon-button md-button md-ink-ripple" type="button" aria-label="More"  ng-click="$mdOpenMenu()">
+                                           <i class="material-icons ng-scope">more_vert</i>
+                                           </button>
+                                           <md-menu-content width="4">
+                                                <md-menu-item>
+                                                  <md-button ng-click="ctrl.sampleAction('save', $event)">
+                                                    Save
+                                                  </md-button>
+                                                </md-menu-item>
+                                               <md-menu-item>
+                                                  <md-button ng-click="ctrl.sampleAction('edit', $event)">
+                                                    Edit
+                                                  </md-button>
+                                                </md-menu-item>
+                                               <md-menu-item>
+                                                  <md-button ng-click="ctrl.sampleAction('share', $event)">
+                                                    Close
+                                                  </md-button>
+                                                </md-menu-item>
+                                                
+                                           </md-menu-content>
+                                            </md-menu>
+                                        </md-menu-bar>
+                                    </div>
+                                 </md-toolbar>
+                                 <div class="card-content">
+                                    <div class="row">
+                                       <div class="col s3 no-padding">
+                                          <div class="product-img">
+                                             <img class="responsive-img" src="images/placeholder-thumb.jpg" alt="" />
+                                          </div>
+                                          <div class="image-thumbnails">
+                                              <ul class="img-thumb">
+                                                <li><img class="responsive-img" src="images/placeholder-thumb.jpg" alt="" /></li>
+                                                <li><img class="responsive-img" src="images/placeholder-thumb.jpg" alt="" /></li>
+                                                <li class="add-product-image"><i class="material-icons">&#xE145;</i></li>
+                                             </ul>
+                                          </div>
+                                       </div>
+                                       <div class="col s9 no-padding">
+                                          <div class="row product-details-wrapper">
+                                             <div class="col s6 no-padding">
+                                                <div class="product-details md-inline-form">
+                                                   <h3 class="no-top-margin">Product Details</h3>
+                                                   <ul>
+                                                      <li>
+                                                         <md-input-container class="md-block">
+                                                            <label>Product name:</label>
+                                                            <input type="text" value="iPhone screen Protector">
+                                                         </md-input-container>
+                                                      </li>
+                                                      <li>
+                                                         <md-input-container class="md-block">
+                                                            <label>Manufacturer:</label>
+                                                            <input type="text" value="Apple">
+                                                         </md-input-container>
+                                                      </li>
+                                                      <li ng-controller="catFilterController" ng-cloak>
+                                                         <md-input-container class="md-block inven-cat">
+                                                            <label>Category</label>
+                                                            <md-select ng-model="selectedCats"
+                                                               md-on-close="clearSearchTerm()"
+                                                               data-md-container-class="intSelectHeader"
+                                                               multiple>
+                                                               <md-select-header class="search-select-header">
+                                                                  <input ng-model="searchTerm"
+                                                                     type="search"
+                                                                     placeholder="Search for a Category.."
+                                                                     class="demo-header-searchbox md-text">
+                                                               </md-select-header>
+                                                               <md-optgroup label="cats">
+                                                                   <md-option ng-value="cat" ng-selected="{{cat == 'All'}}" ng-repeat="cat in cats |
+                                                                     filter:searchTerm">{{cat}}</md-option>
+                                                               </md-optgroup>
+                                                            </md-select>
+                                                         </md-input-container>
+                                                      </li>
+                                                      <li>
+                                                         <md-input-container class="md-block">
+                                                            <label>Color:</label>
+                                                            <input type="text" value="Color">
+                                                         </md-input-container>
+                                                      </li>
+                                                      <li>
+                                                         <md-input-container class="md-block inven-cat md-input-has-placeholder md-input-has-value">
+                                                         <label>Size:</label>
+                                                         <md-select ng-model="productsize"  class="">
+                                                             <md-option value="all" ng-selected="true">None</md-option>
+                                                            <md-option value="small">Small</md-option>
+                                                            <md-option value="medium">Medium</md-option>
+                                                            <md-option value="large">Large</md-option>
+                                                         </md-select>
+                                                         </md-input-container>
+                                                      </li>
+                                                   </ul>
+                                                </div>
+                                                <div class="product-details product-dimension">
+                                                   <h3>Dimensions</h3>
+                                                   <ul>
+                                                      <li>
+                                                         <md-input-container class="md-block">
+                                                            <label>Width:</label>
+                                                            <input type="text" value="30cm">
+                                                         </md-input-container>
+                                                      </li>
+                                                      <li>
+                                                         <md-input-container class="md-block">
+                                                            <label>Depth:</label>
+                                                            <input type="text" value="50cm">
+                                                         </md-input-container>
+                                                      </li>
+                                                      <li>
+                                                         <md-input-container class="md-block">
+                                                            <label>Height</label>
+                                                            <input type="text" value="25cm">
+                                                         </md-input-container>
+                                                      </li>
+                                                      <li>
+                                                         <md-input-container class="md-block">
+                                                            <label>Weight</label>
+                                                            <input type="text" value="2.5cm">
+                                                         </md-input-container>
+                                                      </li>
+                                                      <li>
+                                                         <md-input-container class="md-block">
+                                                            <label>Volume:</label>
+                                                            <input type="text" value="30ltr">
+                                                         </md-input-container>
+                                                      </li>
+                                                   </ul>
+                                                </div>
+                                             </div>
+                                             <div class="col s6 no-padding">
+                                                <div class="product-details">
+                                                   <h3 class="no-top-margin">Stock</h3>
+                                                   <ul>
+                                                      <li>
+                                                         <md-input-container class="md-block">
+                                                            <label>On Orders:</label>
+                                                            <input type="text" value="2">
+                                                         </md-input-container>
+                                                      </li>
+                                                      <li>
+                                                         <md-input-container class="md-block">
+                                                            <label>Min Stock:</label>
+                                                            <input type="text" value="4">
+                                                         </md-input-container>
+                                                      </li>
+                                                      <li>
+                                                         <md-input-container class="md-block">
+                                                            <label>In Stock:</label>
+                                                            <input type="text" value="0">
+                                                         </md-input-container>
+                                                      </li>
+                                                      <li>
+                                                         <md-input-container class="md-block inven-cat md-input-has-placeholder md-input-has-value">
+                                                         <label>Status:</label>
+                                                         <md-select ng-model="weapon" placeholder="Weapon" class="">
+                                                             <md-option value="axe" ng-selected="true">Axe</md-option>
+                                                            <md-option value="sword">Sword</md-option>
+                                                            <md-option value="wand">Wand</md-option>
+                                                            <md-option value="pen">Pen?</md-option>
+                                                         </md-select>
+                                                         </md-input-container>
+                                                      </li>
+                                                      <li ng-controller="catFilterController" ng-cloak>
+                                                         <md-input-container class="md-block inven-cat">
+                                                            <label>Channels</label>
+                                                            <md-select ng-model="selectedCats"
+                                                               md-on-close="clearSearchTerm()"
+                                                               data-md-container-class="intSelectHeader"
+                                                               multiple>
+                                                               <md-select-header class="search-select-header">
+                                                                  <input ng-model="searchTerm"
+                                                                     type="search"
+                                                                     placeholder="Search for a Category.."
+                                                                     class="demo-header-searchbox md-text">
+                                                               </md-select-header>
+                                                               <md-optgroup label="cats">
+                                                                   <md-option ng-value="cat" ng-selected="{{cat == 'All'}}" ng-repeat="cat in cats |
+                                                                     filter:searchTerm">{{cat}}</md-option>
+                                                               </md-optgroup>
+                                                            </md-select>
+                                                         </md-input-container>
+                                                      </li>
+                                                   </ul>
+                                                </div>
+                                                <div class="product-details product-logistics">
+                                                   <h3>RIYO Logistics Warehouse</h3>
+                                                   <ul>
+                                                      <li>
+                                                         <md-input-container class="md-block">
+                                                            <label>Warehouse location:</label>
+                                                            <input type="text" value="D 15 A">
+                                                         </md-input-container>
+                                                      </li>
+                                                      <li>
+                                                         <md-input-container class="md-block">
+                                                            <label>Sku:</label>
+                                                            <input type="text" value="SP 5214963 MLK">
+                                                         </md-input-container>
+                                                      </li>
+                                                      <li>
+                                                         <md-input-container class="md-block">
+                                                            <label>Barcode:</label>
+                                                            <input type="text" value="327469851">
+                                                         </md-input-container>
+                                                      </li>
+                                                      <li>
+                                                          <md-input-container class="md-block inven-cat md-input-has-placeholder md-input-has-value">
+                                                         <label>Seller:</label>
+                                                         <md-select ng-model="seller" placeholder="seller" class="">
+                                                             <md-option value="trade" ng-selected="true">Online trade ltd</md-option>
+                                                            <md-option value="abc">abc trade ltd</md-option>
+                                                            <md-option value="test">test trade ltd</md-option>
+                                                            <md-option value="demo">demo trade ltd</md-option>
+                                                         </md-select>
+                                                          </md-input-container>
+                                                      </li>
+                                                      <li>
+                                                         <md-input-container class="md-block">
+                                                            <label>Seller ID:</label>
+                                                            <input type="text" value="avi00125369">
+                                                         </md-input-container>
+                                                      </li>
+                                                   </ul>
+                                                </div>
+                                             </div>
+                                          </div>
+                                       </div>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+                        </li>
+                        <li>
+                           <div class="collapsible-header">
+                              <div class="row">
+                                 <div class="invt-details product-list col s1 card-content">
+                                    <div class="section product-img">
+                                       <img class="responsive-img" src="images/order-product.jpg" alt="" />
+                                    </div>
+                                 </div>
+                                 <div class="invt-details product-list col s3 card-content">
+                                    <div class="section">
+                                       <h2>Product Full Name</h2>
+                                    </div>
+                                 </div>
+                                 <div class="invt-details product-list col s3 card-content">
+                                    <div class="section">
+                                       <h2>Sp 5214963 MLK</h2>
+                                    </div>
+                                 </div>
+                                 <div class="invt-details product-list col s1 card-content">
+                                    <div class="section">
+                                       <h2>13</h2>
+                                    </div>
+                                 </div>
+                                 <div class="invt-details product-list col s1 card-content">
+                                    <div class="section">
+                                       <h2>4</h2>
+                                    </div>
+                                 </div>
+                                 <div class="invt-details product-list col s1 card-content">
+                                    <div class="section">
+                                       <h2>0</h2>
+                                    </div>
+                                 </div>
+                                 <div class="invt-details product-list col s2 card-content">
+                                    <div class="section">
+                                       <h2>Active</h2>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+                           <div class="collapsible-body">test</div>
+                        </li>
+                        <li>
+                           <div class="collapsible-header">
+                              <div class="row">
+                                 <div class="invt-details product-list col s1 card-content">
+                                    <div class="section product-img">
+                                       <img class="responsive-img" src="images/order-product.jpg" alt="" />
+                                    </div>
+                                 </div>
+                                 <div class="invt-details product-list col s3 card-content">
+                                    <div class="section">
+                                       <h2>Product Full Name</h2>
+                                    </div>
+                                 </div>
+                                 <div class="invt-details product-list col s3 card-content">
+                                    <div class="section">
+                                       <h2>Sp 5214963 MLK</h2>
+                                    </div>
+                                 </div>
+                                 <div class="invt-details product-list col s1 card-content">
+                                    <div class="section">
+                                       <h2>13</h2>
+                                    </div>
+                                 </div>
+                                 <div class="invt-details product-list col s1 card-content">
+                                    <div class="section">
+                                       <h2>4</h2>
+                                    </div>
+                                 </div>
+                                 <div class="invt-details product-list col s1 card-content">
+                                    <div class="section">
+                                       <h2>0</h2>
+                                    </div>
+                                 </div>
+                                 <div class="invt-details product-list col s2 card-content">
+                                    <div class="section">
+                                       <h2>Active</h2>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+                           <div class="collapsible-body">
+                              asdasd
+                           </div>
+                        </li>
+                        <li>
+                           <div class="collapsible-header">
+                              <div class="row">
+                                 <div class="invt-details product-list col s1 card-content">
+                                    <div class="section product-img">
+                                       <img class="responsive-img" src="images/order-product.jpg" alt="" />
+                                    </div>
+                                 </div>
+                                 <div class="invt-details product-list col s3 card-content">
+                                    <div class="section">
+                                       <h2>Product Full Name</h2>
+                                    </div>
+                                 </div>
+                                 <div class="invt-details product-list col s3 card-content">
+                                    <div class="section">
+                                       <h2>Sp 5214963 MLK</h2>
+                                    </div>
+                                 </div>
+                                 <div class="invt-details product-list col s1 card-content">
+                                    <div class="section">
+                                       <h2>13</h2>
+                                    </div>
+                                 </div>
+                                 <div class="invt-details product-list col s1 card-content">
+                                    <div class="section">
+                                       <h2>4</h2>
+                                    </div>
+                                 </div>
+                                 <div class="invt-details product-list col s1 card-content">
+                                    <div class="section">
+                                       <h2>0</h2>
+                                    </div>
+                                 </div>
+                                 <div class="invt-details product-list col s2 card-content">
+                                    <div class="section">
+                                       <h2>Active</h2>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+                           <div class="collapsible-body">
+                              sdaas
+                           </div>
+                        </li>
+                     </ul>
+                  </div>
+                  <!-- Close to Minimum Products -->
+                  <div class="close-to-minimum">
+                     <div class="stock-list-heading">
+                         <h3 class="sub-title">Close To Minimum <sub>(2)</sub></h3>
+                     </div>
+                     <div class="stock-collection">
+                        <ul class="collapsible popout" data-collapsible="accordion">
+                           <li>
+                              <div class="collapsible-header">
+                                 <div class="row">
+                                    <div class="invt-details product-list col s1 card-content">
+                                       <div class="section product-img">
+                                          <img class="responsive-img" src="images/order-product.jpg" alt="" />
+                                       </div>
+                                    </div>
+                                    <div class="invt-details product-list col s3 card-content">
+                                       <div class="section">
+                                          <h2>Product Full Name</h2>
+                                       </div>
+                                    </div>
+                                    <div class="invt-details product-list col s3 card-content">
+                                       <div class="section">
+                                          <h2>Sp 5214963 MLK</h2>
+                                       </div>
+                                    </div>
+                                    <div class="invt-details product-list col s1 card-content">
+                                       <div class="section">
+                                          <h2>13</h2>
+                                       </div>
+                                    </div>
+                                    <div class="invt-details product-list col s1 card-content">
+                                       <div class="section">
+                                          <h2>4</h2>
+                                       </div>
+                                    </div>
+                                    <div class="invt-details product-list col s1 card-content">
+                                       <div class="section">
+                                          <h2>0</h2>
+                                       </div>
+                                    </div>
+                                    <div class="invt-details product-list col s2 card-content">
+                                       <div class="section">
+                                          <h2>Active</h2>
+                                       </div>
+                                    </div>
+                                 </div>
+                              </div>
+                              <div class="collapsible-body">teste</div>
+                           </li>
+                           <li>
+                              <div class="collapsible-header">
+                                 <div class="row">
+                                    <div class="invt-details product-list col s1 card-content">
+                                       <div class="section product-img">
+                                          <img class="responsive-img" src="images/order-product.jpg" alt="" />
+                                       </div>
+                                    </div>
+                                    <div class="invt-details product-list col s3 card-content">
+                                       <div class="section">
+                                          <h2>Product Full Name</h2>
+                                       </div>
+                                    </div>
+                                    <div class="invt-details product-list col s3 card-content">
+                                       <div class="section">
+                                          <h2>Sp 5214963 MLK</h2>
+                                       </div>
+                                    </div>
+                                    <div class="invt-details product-list col s1 card-content">
+                                       <div class="section">
+                                          <h2>13</h2>
+                                       </div>
+                                    </div>
+                                    <div class="invt-details product-list col s1 card-content">
+                                       <div class="section">
+                                          <h2>4</h2>
+                                       </div>
+                                    </div>
+                                    <div class="invt-details product-list col s1 card-content">
+                                       <div class="section">
+                                          <h2>0</h2>
+                                       </div>
+                                    </div>
+                                    <div class="invt-details product-list col s2 card-content">
+                                       <div class="section">
+                                          <h2>Active</h2>
+                                       </div>
+                                    </div>
+                                 </div>
+                              </div>
+                              <div class="collapsible-body">asdas</div>
+                           </li>
+                        </ul>
+                     </div>
+                  </div>
+                  <!-- Active Products -->
+                  <div class="invt-active">
+                     <div class="stock-list-heading">
+                         <h3 class="sub-title">Active <sub>(55)</sub></h3>
+                     </div>
+                     <div class="stock-collection">
+                        <ul class="collapsible popout" data-collapsible="accordion">
+                           <li>
+                              <div class="collapsible-header">
+                                 <div class="row">
+                                    <div class="invt-details product-list col s1 card-content">
+                                       <div class="section product-img">
+                                          <img class="responsive-img" src="images/order-product.jpg" alt="" />
+                                       </div>
+                                    </div>
+                                    <div class="invt-details product-list col s3 card-content">
+                                       <div class="section">
+                                          <h2>Product Full Name</h2>
+                                       </div>
+                                    </div>
+                                    <div class="invt-details product-list col s3 card-content">
+                                       <div class="section">
+                                          <h2>Sp 5214963 MLK</h2>
+                                       </div>
+                                    </div>
+                                    <div class="invt-details product-list col s1 card-content">
+                                       <div class="section">
+                                          <h2>13</h2>
+                                       </div>
+                                    </div>
+                                    <div class="invt-details product-list col s1 card-content">
+                                       <div class="section">
+                                          <h2>4</h2>
+                                       </div>
+                                    </div>
+                                    <div class="invt-details product-list col s1 card-content">
+                                       <div class="section">
+                                          <h2>0</h2>
+                                       </div>
+                                    </div>
+                                    <div class="invt-details product-list col s2 card-content">
+                                       <div class="section">
+                                          <h2>Active</h2>
+                                       </div>
+                                    </div>
+                                 </div>
+                              </div>
+                              <div class="collapsible-body">asdasd</div>
+                           </li>
+                           <li>
+                              <div class="collapsible-header">
+                                 <div class="row">
+                                    <div class="invt-details product-list col s1 card-content">
+                                       <div class="section product-img">
+                                          <img class="responsive-img" src="images/order-product.jpg" alt="" />
+                                       </div>
+                                    </div>
+                                    <div class="invt-details product-list col s3 card-content">
+                                       <div class="section">
+                                          <h2>Product Full Name</h2>
+                                       </div>
+                                    </div>
+                                    <div class="invt-details product-list col s3 card-content">
+                                       <div class="section">
+                                          <h2>Sp 5214963 MLK</h2>
+                                       </div>
+                                    </div>
+                                    <div class="invt-details product-list col s1 card-content">
+                                       <div class="section">
+                                          <h2>13</h2>
+                                       </div>
+                                    </div>
+                                    <div class="invt-details product-list col s1 card-content">
+                                       <div class="section">
+                                          <h2>4</h2>
+                                       </div>
+                                    </div>
+                                    <div class="invt-details product-list col s1 card-content">
+                                       <div class="section">
+                                          <h2>0</h2>
+                                       </div>
+                                    </div>
+                                    <div class="invt-details product-list col s2 card-content">
+                                       <div class="section">
+                                          <h2>Active</h2>
+                                       </div>
+                                    </div>
+                                 </div>
+                              </div>
+                              <div class="collapsible-body">
+                                 adasdasd
+                              </div>
+                           </li>
+                           <li>
+                              <div class="collapsible-header">
+                                 <div class="row">
+                                    <div class="invt-details product-list col s1 card-content">
+                                       <div class="section product-img">
+                                          <img class="responsive-img" src="images/order-product.jpg" alt="" />
+                                       </div>
+                                    </div>
+                                    <div class="invt-details product-list col s3 card-content">
+                                       <div class="section">
+                                          <h2>Product Full Name</h2>
+                                       </div>
+                                    </div>
+                                    <div class="invt-details product-list col s3 card-content">
+                                       <div class="section">
+                                          <h2>Sp 5214963 MLK</h2>
+                                       </div>
+                                    </div>
+                                    <div class="invt-details product-list col s1 card-content">
+                                       <div class="section">
+                                          <h2>13</h2>
+                                       </div>
+                                    </div>
+                                    <div class="invt-details product-list col s1 card-content">
+                                       <div class="section">
+                                          <h2>4</h2>
+                                       </div>
+                                    </div>
+                                    <div class="invt-details product-list col s1 card-content">
+                                       <div class="section">
+                                          <h2>0</h2>
+                                       </div>
+                                    </div>
+                                    <div class="invt-details product-list col s2 card-content">
+                                       <div class="section">
+                                          <h2>Active</h2>
+                                       </div>
+                                    </div>
+                                 </div>
+                              </div>
+                              <div class="collapsible-body">
+                                 asdsad
+                              </div>
+                           </li>
+                        </ul>
+                     </div>
+                  </div>
+                  <!-- Create New Product -->
+                  <a href="#new_product" class="modal-trigger new-productbtn">
+                    <md-button class="md-fab btn-floating btn-large" aria-label="Submit New Order">
+                      <i class="material-icons">add</i>
+                      <md-tooltip md-visible="demo.showTooltip" md-direction="top">
+                        Submit New Product
+                      </md-tooltip>
+                    </md-button>
+                  </a>
+                  
+                  <!-- New Product Form -->
+                  <div id="new_product" class="modal inventory_popup">
+                     <md-toolbar class="product-card _md _md-toolbar-transitions">
+                        <div class="md-toolbar-tools">
+                           <h2>
+                              <span>Submit New Product</span>
+                           </h2>
+                           
+                           <span flex="" class="flex"></span>
+                           <button class="md-icon-button md-button md-ink-ripple modal-close" type="button" aria-label="Cancle">
+                           <i class="material-icons ng-scope">cancel</i>
+                           </button>
+                           <button class="md-icon-button md-button md-ink-ripple modal-close" type="button" aria-label="Favorite">
+                           <i class="material-icons ng-scope">done</i>
+                           </button>
+                          
+                           <button class="md-icon-button md-button md-ink-ripple" type="button" aria-label="More"  ng-click="$mdOpenMenu()">
+                           <i class="material-icons ng-scope">more_vert</i>
+                           </button>
+                          
+                        </div>
+                     </md-toolbar>
+                     <div class="card int-product-edit">
+                        <div class="card-content">
+                           <div class="row add-product-wrap">
+                              <div class="col s3 no-padding">
+                                 <div class="product-img">
+                                    <img class="responsive-img" src="images/placeholder-thumb.jpg" alt="">
+                                 </div>
+                                 <div class="image-thumbnails">
+                                    <ul>
+                                       <li><img class="responsive-img" src="images/placeholder-thumb.jpg" alt=""></li>
+                                       <li><img class="responsive-img" src="images/placeholder-thumb.jpg" alt=""></li>
+                                       <li class="add-product-image"><i class="material-icons">&#xE145;</i></li>
+                                    </ul>
+                                 </div>
+                              </div>
+                              <div class="col s9 no-padding">
+                                 <div class="row product-details-wrapper">
+                                    <div class="col s6 no-padding">
+                                       <div class="product-details md-inline-form">
+                                          <h3>Product Details</h3>
+                                          <ul>
+                                             <li>
+                                                <md-input-container class="md-block md-input-has-value">
+                                                   <label for="input_20" class="active">Product name:</label>
+                                                   <input type="text" value="iPhone screen Protector" class="md-input" id="input_20">
+                                                   <div class="md-errors-spacer"></div>
+                                                </md-input-container>
+                                             </li>
+                                             <li>
+                                                <md-input-container class="md-block md-input-has-value">
+                                                   <label for="input_21" class="active">Manufacturer:</label>
+                                                   <input type="text" value="Apple" class="md-input" id="input_21">
+                                                   <div class="md-errors-spacer"></div>
+                                                </md-input-container>
+                                             </li>
+                                             <li ng-controller="newproductcatController" ng-cloak>
+                                                        <md-input-container class="md-block inven-cat">
+                                                            <label>Category</label>
+                                                            <md-select ng-model="selectedCatsnewproduct"
+                                                               md-on-close="clearSearchTerm()"
+                                                               data-md-container-class="intSelectHeader"
+                                                               multiple>
+                                                               <md-select-header class="search-select-header">
+                                                                  <input ng-model="searchTerm"
+                                                                     type="search"
+                                                                     placeholder="Search for a Category.."
+                                                                     class="demo-header-searchbox md-text">
+                                                               </md-select-header>
+                                                               <md-optgroup label="cats">
+                                                                   <md-option ng-value="cat" ng-selected="{{cat == 'All'}}" ng-repeat="cat in cats |
+                                                                     filter:searchTerm">{{cat}}</md-option>
+                                                               </md-optgroup>
+                                                            </md-select>
+                                                         </md-input-container>
+                                                      </li>
+                                             <li>
+                                                <md-input-container class="md-block md-input-has-value">
+                                                   <label for="input_25" class="active">Color:</label>
+                                                   <input type="text" value="Color" class="md-input" id="input_25">
+                                                   <div class="md-errors-spacer"></div>
+                                                </md-input-container>
+                                             </li>
+                                             <li>
+                                                         <md-input-container class="md-block inven-cat md-input-has-placeholder md-input-has-value">
+                                                         <label>Size:</label>
+                                                         <md-select ng-model="productsize"  class="">
+                                                             <md-option value="all" ng-selected="true">None</md-option>
+                                                            <md-option value="small">Small</md-option>
+                                                            <md-option value="medium">Medium</md-option>
+                                                            <md-option value="large">Large</md-option>
+                                                         </md-select>
+                                                         </md-input-container>
+                                             </li>
+                                          </ul>
+                                       </div>
+                                       <div class="product-details product-dimension">
+                                          <h3>Dimensions</h3>
+                                          <ul>
+                                             <li>
+                                                <md-input-container class="md-block md-input-has-value">
+                                                   <label for="input_26" class="active">Width:</label>
+                                                   <input type="text" value="30cm" class="md-input" id="input_26">
+                                                   <div class="md-errors-spacer"></div>
+                                                </md-input-container>
+                                             </li>
+                                             <li>
+                                                <md-input-container class="md-block md-input-has-value">
+                                                   <label for="input_27" class="active">Depth:</label>
+                                                   <input type="text" value="50cm" class="md-input" id="input_27">
+                                                   <div class="md-errors-spacer"></div>
+                                                </md-input-container>
+                                             </li>
+                                             <li>
+                                                <md-input-container class="md-block md-input-has-value">
+                                                   <label for="input_28" class="active">Height</label>
+                                                   <input type="text" value="25cm" class="md-input" id="input_28">
+                                                   <div class="md-errors-spacer"></div>
+                                                </md-input-container>
+                                             </li>
+                                             <li>
+                                                <md-input-container class="md-block md-input-has-value">
+                                                   <label for="input_29" class="active">Weight</label>
+                                                   <input type="text" value="2.5cm" class="md-input" id="input_29">
+                                                   <div class="md-errors-spacer"></div>
+                                                </md-input-container>
+                                             </li>
+                                             <li>
+                                                <md-input-container class="md-block md-input-has-value">
+                                                   <label for="input_30" class="active">Volume:</label>
+                                                   <input type="text" value="30ltr" class="md-input" id="input_30">
+                                                   <div class="md-errors-spacer"></div>
+                                                </md-input-container>
+                                             </li>
+                                          </ul>
+                                       </div>
+                                    </div>
+                                    <div class="col s6 no-padding">
+                                       <div class="product-details">
+                                          <h3>Stock</h3>
+                                          <ul>
+                                             <li>
+                                                <md-input-container class="md-block md-input-has-value">
+                                                   <label for="input_31" class="active">On Orders:</label>
+                                                   <input type="text" value="2" class="md-input" id="input_31">
+                                                   <div class="md-errors-spacer"></div>
+                                                </md-input-container>
+                                             </li>
+                                             <li>
+                                                <md-input-container class="md-block md-input-has-value">
+                                                   <label for="input_32" class="active">Min Stock:</label>
+                                                   <input type="text" value="4" class="md-input" id="input_32">
+                                                   <div class="md-errors-spacer"></div>
+                                                </md-input-container>
+                                             </li>
+                                             <li>
+                                                <md-input-container class="md-block md-input-has-value">
+                                                   <label for="input_33" class="active">In Stock:</label>
+                                                   <input type="text" value="0" class="md-input" id="input_33">
+                                                   <div class="md-errors-spacer"></div>
+                                                </md-input-container>
+                                             </li>
+                                             <li>
+                                                 <md-input-container class="md-block inven-cat md-input-has-placeholder md-input-has-value">
+                                                    <label>Status:</label>
+                                                    <md-select ng-model="newprodstatus" placeholder="Weapon" class="">
+                                                       <md-option value="axe" ng-selected="true">Axe</md-option>
+                                                       <md-option value="sword">Sword</md-option>
+                                                       <md-option value="wand">Wand</md-option>
+                                                       <md-option value="pen">Pen?</md-option>
+                                                    </md-select>
+                                                 </md-input-container>
+                                             </li>
+                                             <li ng-controller="newproductcatController" ng-cloak>
+                                                         <md-input-container class="md-block inven-cat">
+                                                            <label>Channels</label>
+                                                            <md-select ng-model="selectedCats"
+                                                               md-on-close="clearSearchTerm()"
+                                                               data-md-container-class="intSelectHeader"
+                                                               multiple>
+                                                               <md-select-header class="search-select-header">
+                                                                  <input ng-model="searchTerm"
+                                                                     type="search"
+                                                                     placeholder="Search for a Category.."
+                                                                     class="demo-header-searchbox md-text">
+                                                               </md-select-header>
+                                                               <md-optgroup label="cats">
+                                                                   <md-option ng-value="cat" ng-selected="{{cat == 'All'}}" ng-repeat="cat in cats |
+                                                                     filter:searchTerm">{{cat}}</md-option>
+                                                               </md-optgroup>
+                                                            </md-select>
+                                                         </md-input-container>
+                                                      </li>
+                                          </ul>
+                                       </div>
+                                       <div class="product-details product-logistics">
+                                          <h3>RIYO Logistics Warehouse</h3>
+                                          <ul>
+                                             <li>
+                                                <md-input-container class="md-block md-input-has-value">
+                                                   <label for="input_35" class="active">Warehouse location:</label>
+                                                   <input type="text" value="D 15 A" class="md-input" id="input_35">
+                                                   <div class="md-errors-spacer"></div>
+                                                </md-input-container>
+                                             </li>
+                                             <li>
+                                                <md-input-container class="md-block md-input-has-value">
+                                                   <label for="input_36" class="active">Sku:</label>
+                                                   <input type="text" value="SP 5214963 MLK" class="md-input" id="input_36">
+                                                   <div class="md-errors-spacer"></div>
+                                                </md-input-container>
+                                             </li>
+                                             <li>
+                                                <md-input-container class="md-block md-input-has-value">
+                                                   <label for="input_37" class="active">Barcode:</label>
+                                                   <input type="text" value="327469851" class="md-input" id="input_37">
+                                                   <div class="md-errors-spacer"></div>
+                                                </md-input-container>
+                                             </li>
+                                             <li>
+                                                <md-input-container class="md-block inven-cat md-input-has-placeholder md-input-has-value">
+                                                 <label>Seller:</label>
+                                                 <md-select ng-model="newprodseller" placeholder="seller" class="">
+                                                   <md-option value="trade" ng-selected="true">Online trade ltd</md-option>
+                                                  <md-option value="abc">abc trade ltd</md-option>
+                                                  <md-option value="test">test trade ltd</md-option>
+                                                  <md-option value="demo">demo trade ltd</md-option>
+                                                  </md-select>
+                                                </md-input-container>
+                                            </li>
+                                             <li>
+                                                <md-input-container class="md-block md-input-has-value">
+                                                   <label for="input_39" class="active">Seller ID:</label>
+                                                   <input type="text" value="avi00125369" class="md-input" id="input_39">
+                                                   <div class="md-errors-spacer"></div>
+                                                </md-input-container>
+                                             </li>
+                                          </ul>
+                                       </div>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <!-- Container End -->
+      </div>
+      <!-- Main End -->
+      <!--Import jQuery before materialize js-->
+      <script type="text/javascript" src="js/materialize.min.js"></script>
+      <!-- Angular Lib js -->
+      <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+      <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
+      <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
+      <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
+      <!-- Angular Material Library -->
+      <script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
+      <!-- Load Page App  -->
+      <script type="text/javascript">
+         (function () {
+             'use strict';
+             angular
+             .module('inventory', ['ngMaterial'])
+             // Theme Config
+             .config(function($mdThemingProvider) {
+                 $mdThemingProvider.theme('default')
+                 .primaryPalette('blue',{
+                     'default': 'A700'
+                 })
+                 .accentPalette('blue', {
+                     'default': 'A700'
+                 });
+             })
+         
+             .controller('StatusController', function($scope) {
+                 $scope.items = ['All', 'Active', 'Inactive'];
+                 $scope.selectedItem;
+                 $scope.getSelectedText = function() {
+                     if($scope.selectedItem !== undefined){
+                         return  $scope.selectedItem;
+                     }else{
+                         return  $scope.selectedItem = 'All';
+                     }
+                 }
+             })
+         
+             // Category Filter
+             .controller('catFilterController', function($scope, $element) {
+                 $scope.cats = ['All', 'Amazon' ,'Shopify' ,'Flipkart', 'WooCommerce' ];
+                 $scope.searchTerm;
+             
+                 $scope.clearSearchTerm = function() {
+                     $scope.searchTerm = '';
+                 };
+                 // The md-select directive eats keydown events for some quick select
+                 // logic. Since we have a search input here, we don't need that logic.
+                 $element.find('input').on('keydown', function(ev) {
+                     ev.stopPropagation();
+                 });
+             })
+             
+             // Category Filter for submit new product
+             .controller('newproductcatController', function($scope, $element) {
+                 $scope.cats = ['All', 'Amazon' ,'Shopify' ,'Flipkart', 'WooCommerce' ];
+                 $scope.searchTerm;
+             
+                 $scope.clearSearchTerm = function() {
+                     $scope.searchTerm = '';
+                 };
+                
+                 // The md-select directive eats keydown events for some quick select
+                 // logic. Since we have a search input here, we don't need that logic.
+                 $element.find('input').on('keydown', function(ev) {
+                     ev.stopPropagation();
+                 });
+             })
+             
+         
+             // Channel Filter
+             .controller('channelFilterController', function($scope, $element) {
+                 $scope.channels = ['All', 'Amazon' ,'Shopify' ,'Flipkart', 'WooCommerce' ];
+                 $scope.searchTerm;
+                 $scope.clearSearchTerm = function() {
+                     $scope.searchTerm = '';
+                 };
+                 // The md-select directive eats keydown events for some quick select
+                 // logic. Since we have a search input here, we don't need that logic.
+                 $element.find('input').on('keydown', function(ev) {
+                     ev.stopPropagation();
+                 });
+             })
+         
+             // Customer Filter
+             .controller('custFilterController', function($scope, $element) {
+                 $scope.customers = ['All', 'Amazon' ,'Shopify' ,'Flipkart', 'WooCommerce' ];
+                 $scope.searchTerm;
+                 $scope.clearSearchTerm = function() {
+                     $scope.searchTerm = '';
+                 };
+                 // The md-select directive eats keydown events for some quick select
+                 // logic. Since we have a search input here, we don't need that logic.
+                 $element.find('input').on('keydown', function(ev) {
+                     ev.stopPropagation();
+                 });
+             })
+         
+             // Card
+             /* .controller('showProductCard', function ($scope) {
+                 //This will hide the DIV by default.
+                 $scope.IsHidden = true;
+                 $scope.IsVisible = false;
+                 $scope.showHideCard = function () {
+                     //If DIV is visible it will be hidden and vice versa.
+                     if($scope.IsVisible == false){
+                         $scope.IsVisible = true;
+                     }else{
+                         $scope.IsVisible = true;
+                     }
+                 
+                     if($scope.IsHidden == false){
+                         $scope.IsHidden = true;
+                     }else{
+                         $scope.IsHidden = true;
+                     }
+                 }
+             })*/
+         
+             .controller('showProductCard', function ($scope) {
+                 //This will hide the DIV by default.
+                 $scope.editProduct = false;
+                 $scope.viewProduct = false;
+                 $scope.showEditCard = function () {
+                     $scope.viewProduct = true;
+                     $scope.editProduct = true;
+                
+                 }
+                 $scope.showViewCard = function () {
+                     $scope.editProduct = false;
+                     $scope.viewProduct = false;
+                 }
+             })
+         
+         
+         
+             // Autocomplete Search
+             .controller('invtSearch', invtSearch);
+             function invtSearch ($timeout, $q, $log) {
+                 var self = this;
+         
+                 self.simulateQuery = false;
+                 self.isDisabled    = false;
+         
+                 // list of `state` value/display objects
+                 self.states        = loadAll();
+                 self.querySearch   = querySearch;
+                 self.selectedItemChange = selectedItemChange;
+                 self.searchTextChange   = searchTextChange;
+         
+                 self.newState = newState;
+         
+                 function newState(state) {
+                     alert("Sorry! You'll need to create a Constitution for " + state + " first!");
+                 }
+         
+                 // ******************************
+                 // Internal methods
+                 // ******************************
+         
+                 /**
+                  * Search for states... use $timeout to simulate
+                  * remote dataservice call.
+                  */
+                 function querySearch (query) {
+                     var results = query ? self.states.filter( createFilterFor(query) ) : self.states,
+                     deferred;
+                     if (self.simulateQuery) {
+                         deferred = $q.defer();
+                         $timeout(function () { deferred.resolve( results ); }, Math.random() * 1000, false);
+                         return deferred.promise;
+                     } else {
+                         return results;
+                     }
+                 }
+         
+                 function searchTextChange(text) {
+                     $log.info('Text changed to ' + text);
+                 }
+         
+                 function selectedItemChange(item) {
+                     $log.info('Item changed to ' + JSON.stringify(item));
+                 }
+         
+                 /**
+                  * Build `states` list of key/value pairs
+                  */
+                 function loadAll() {
+                     var allStates = 'Nokia Mobile, samsung TV, Onida AC';
+         
+                     return allStates.split(/, +/g).map( function (state) {
+                         return {
+                             value: state.toLowerCase(),
+                             display: state
+                         };
+                     });
+                 }
+         
+                 /**
+                  * Create filter function for a query string
+                  */
+                 function createFilterFor(query) {
+                     var lowercaseQuery = angular.lowercase(query);
+         
+                     return function filterFn(state) {
+                         return (state.value.indexOf(lowercaseQuery) === 0);
+                     };
+         
+                 }
+             }
+             
+             /* Sticky Product on window scroll */
+            window.onscroll = function() {
+               var window_scroll = $(this).scrollTop();
+               var active_scroll = $(".collapsible .active").offset().top;
+                 console.log(window_scroll);
+                 console.log(active_scroll);
+                 if(window_scroll > active_scroll){
+                     //if(!$(".collapsible .active .collapsible-body").hasClass('fix-product')){
+                        var window_height = $( window ).height();
+                        $(".collapsible .active").addClass("fix-product");
+                        $(".collapsible .active").css("height",window_height - 64);
+                        $(".collapsible .active .collapsible-body").css("height",window_height - 64);
+                     //}
+                 }else{
+                     $(".collapsible .active").removeClass("fix-product");
+                     $(".collapsible .active").css("height",'inherit');
+                 }
+            }
+         
+             /* Tootlip js*/
+             $(document).ready(function(){
+              $('.tooltipped').tooltip({delay: 50});
+             });
+             
+             $('.modal').modal();
+         
+             // Close the tab using Product card toolbar
+             $('.md-toolbar-tools h2').on('click', function (e) {
+                 $(this).parents('.active').children('.collapsible-header').trigger('click');
+             });
+         	
+         	
+           // PAGE IS FULLY LOADED  
+           $(window).load(function(){
+                $('#progress-overlay').fadeOut();
+           });
+             
+         })();
+      </script>
+   </body>
+</html>

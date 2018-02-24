@@ -1,0 +1,96 @@
+<html lang="en" class="ng-scope">
+<head>
+<title>Angular</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Angular Material style sheet -->
+  <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  
+</head>
+<body ng-app="myNewApp">
+<div ng-controller="AppCtrl" ng-cloak >
+  <!-- Start Header -->
+    <md-toolbar>
+        <!-- Start Main header -->
+        <div class="md-padding" layout-xs="column" layout="row">
+            <!-- Start logo -->
+            <div flex-xs flex-gt-xs="20">
+                RIYO OFM
+            </div>
+            <!-- End logo -->
+            <!-- Start Menu -->        
+            <div flex-xs flex-gt-xs="60">
+                <md-menu>
+                    <md-button ng-click="" class="md-icon-button" aria-label="Open sample menu">
+                        Dashboard
+                    </md-button>
+                    <md-button ng-click="" class="md-icon-button" aria-label="Open sample menu">
+                        Inventory
+                    </md-button>
+                    <md-button ng-click="" class="md-icon-button" aria-label="Open sample menu">
+                        Orders
+                    </md-button>
+                    <md-button ng-click="" class="md-icon-button" aria-label="Open sample menu">
+                        Integrations
+                    </md-button>
+                    <md-button ng-click="" class="md-icon-button" aria-label="Open sample menu">
+                        Customers
+                    </md-button>
+                </md-menu>
+            </div>
+            <!-- End Menu -->
+            <!-- Start Header last section -->
+            <div flex-xs flex-gt-xs="20">
+                YOAV
+            </div>
+            <!-- End Header last section -->
+        </div>
+        <!-- End Main header -->    
+        
+    </md-toolbar>
+  <!-- End Header -->
+  
+  <!--- Start Dashboard-->
+    <md-content class="md-padding" layout-align="center">
+        <div layout="row" layout-padding layout-margin layout-fill style="height: 300px; text-align: center;">
+            <div flex="70" style="border: 1px solid #000">Alarts</div>
+            <div flex style="border: 1px solid #000">User/Company Details</div>
+        </div>
+        
+        <div layout="row" layout-margin style="height: 150px; text-align: center; border: 1px solid">
+            <div flex>Orders Performance</div>
+            <div flex>This Month<p class="md-display-1">367 Orders</p> -> 16.5%</div>
+            <div flex>This Month<p class="md-display-1">306 Orders</p> -> 2.4%</div>
+        </div>
+        
+        <div layout="row" layout-padding layout-margin layout-fill style="height: 350px; text-align: center;">
+            <div flex="50" style="border: 1px solid #000">Most Selling Products</div>
+            <div flex="50" style="border: 1px solid #000">Sales Per Channel</div>
+        </div>
+        
+        <div layout="row" layout-margin style="height: 150px; text-align: center; border: 1px solid">
+            <div flex="20"><md-icon></md-icon>Submit New Order</div>
+            <div flex="20"><md-icon></md-icon>Submit New Product</div>
+            <div flex="20"><md-icon></md-icon>Create Shipment To Stock</div>
+            <div flex="20"><md-icon></md-icon>Set-up New Sales Channel</div>
+            <div flex="20"><md-icon></md-icon>Create New Service Ticket</div>
+            <div flex="20"><md-icon></md-icon>Get Support</div>
+        </div>
+        
+    </md-content>  
+  <!--- End Dashboard-->
+</div>
+    
+  
+  <!-- Angular Material requires Angular.js Libraries -->
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
+
+  <!-- Angular Material Library -->
+  <script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
+  <script src="js/script.js"></script>
+</body>
+</html>

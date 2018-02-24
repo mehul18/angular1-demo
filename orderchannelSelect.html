@@ -1,0 +1,16 @@
+<md-input-container> 
+    <md-select ng-model="selectedChannels"
+               md-on-close="clearSearchTerm()"
+               data-md-container-class="selectdemoSelectHeader order-channel"
+               multiple>
+        <md-select-header class="search-select-header">
+            <input ng-model="searchTerm"
+                   type="search"
+                   placeholder=""
+                   class="demo-header-searchbox md-text">
+        </md-select-header>
+        <md-optgroup label="channels">
+            <md-option ng-selected="{{channel == 'All'}}" ng-value="channel" ng-repeat="channel in channels| filter:searchTerm">{{channel}}</md-option>
+        </md-optgroup>
+    </md-select>
+</md-input-container>
